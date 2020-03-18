@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "277962049800",
+    "firebase_url": "https://boga-fit-4007a.firebaseio.com",
+    "project_id": "boga-fit-4007a",
+    "storage_bucket": "boga-fit-4007a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:277962049800:android:a3c993fb300cdd300b44bd",
+        "android_client_info": {
+          "package_name": "com.gmail.cristiandeives.bogafit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "277962049800-a0cthtts4co5ajf04er5po67ok2i2n70.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gmail.cristiandeives.bogafit",
+            "certificate_hash": "6bdfe39a20dc696043c2dc30f6c3f19f526258d7"
+          }
+        },
+        {
+          "client_id": "277962049800-h381bgv0jtshi4flpk6vukic6smbmdr5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXncejowt6Wwyh-uBw6zW8IlOWnxNHClY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "277962049800-h381bgv0jtshi4flpk6vukic6smbmdr5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
