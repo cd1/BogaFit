@@ -2,6 +2,9 @@
 <resources>
     <string name="app_name">Boga Fit</string>
 
+    <string name="list_physictivities_loading_message">Loading physical activities information…</string>
+    <string name="list_physictivities_count_label">Number of physical activities:</string>
+
     <string name="add_physictivity_title">Add physical activity</string>
     <string name="add_physictivity_date_label">Date:</string>
     <string name="add_physictivity_physictivity_label">Physical activity:</string>

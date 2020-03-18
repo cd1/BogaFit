@@ -115,7 +115,7 @@ class AddPhysictivityFragment : Fragment(),
 
     @UiThread
     private fun onAddPhysictivitySuccess() {
-        // nothing
+        navController.navigateUp()
     }
 
     @UiThread
