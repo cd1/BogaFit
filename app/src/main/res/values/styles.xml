@@ -13,4 +13,8 @@
         <item name="colorAccent">@color/secondaryColor</item>
     </style>
 
+    <style name="AppTheme.Splash">
+        <item name="android:windowSplashscreenContent">@drawable/splash_screen</item>
+    </style>
+
 </resources>
