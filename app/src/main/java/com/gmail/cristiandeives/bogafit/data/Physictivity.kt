@@ -14,6 +14,7 @@ data class Physictivity(
         WEIGHT_LIFTING,
         RUNNING,
         TREADMILL_RUNNING,
+        WALKING,
         BIKING
     }
 }

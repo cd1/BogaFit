@@ -16,6 +16,7 @@
     <string name="WEIGHT_LIFTING">Weight lifting</string>
     <string name="RUNNING">Running</string>
     <string name="TREADMILL_RUNNING">Treadmill running</string>
+    <string name="WALKING">Walking</string>
     <string name="BIKING">Biking</string>
     <string name="unknown_physictivity">Unknown physical activity</string>
 </resources>

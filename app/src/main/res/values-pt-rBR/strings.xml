@@ -16,6 +16,7 @@
     <string name="WEIGHT_LIFTING">Musculação</string>
     <string name="RUNNING">Corrida</string>
     <string name="TREADMILL_RUNNING">Corrida na esteira</string>
+    <string name="WALKING">Caminhada</string>
     <string name="BIKING">Bicicleta</string>
     <string name="unknown_physictivity">Atividade física desconhecida</string>
 </resources>
