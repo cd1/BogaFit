@@ -14,7 +14,11 @@ data class FirestorePhysictivity(
     fun toPhysictivity() = Physictivity(
         id,
         date?.toLocalDate() ?: LocalDate.now(),
-        Physictivity.Type.valueOf(type),
+        try {
+            Physictivity.Type.valueOf(type)
+        } catch (ex: IllegalArgumentException) {
+            null
+        },
         updatedAt?.toLocalDateTime()
     )
 }
@@ -22,6 +26,6 @@ data class FirestorePhysictivity(
 fun Physictivity.toFirestorePhysictivity() = FirestorePhysictivity(
     id,
     date.toFirestoreTimestamp(),
-    type.toString(),
+    type?.toString() ?: "",
     updatedAt?.toFirestoreTimestamp()
 )

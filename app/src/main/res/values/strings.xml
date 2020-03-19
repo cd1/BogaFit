@@ -17,4 +17,5 @@
     <string name="RUNNING">Running</string>
     <string name="TREADMILL_RUNNING">Treadmill running</string>
     <string name="BIKING">Biking</string>
+    <string name="unknown_physictivity">Unknown physical activity</string>
 </resources>

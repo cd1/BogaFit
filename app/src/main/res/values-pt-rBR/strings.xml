@@ -17,4 +17,5 @@
     <string name="RUNNING">Corrida</string>
     <string name="TREADMILL_RUNNING">Corrida na esteira</string>
     <string name="BIKING">Bicicleta</string>
+    <string name="unknown_physictivity">Atividade física desconhecida</string>
 </resources>

@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 data class Physictivity(
     val id: String = "",
     val date: LocalDate,
-    val type: Type,
+    val type: Type?,
     val updatedAt: LocalDateTime? = null
 ) {
 

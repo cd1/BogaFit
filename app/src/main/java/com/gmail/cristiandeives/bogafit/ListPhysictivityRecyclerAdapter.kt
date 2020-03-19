@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.gmail.cristiandeives.bogafit.data.Physictivity
@@ -50,7 +51,7 @@ class ListPhysictivityRecyclerAdapter : RecyclerView.Adapter<ListPhysictivityRec
         val physictivity = data[position]
 
         holder.binding.apply {
-            typeText.text = physictivity.type.toLocalizedString(context)
+            typeText.setText(physictivity.type?.toStringResource(context) ?: R.string.unknown_physictivity)
             dateText.text = dateFormatter.format(physictivity.date)
         }
 
@@ -74,11 +75,8 @@ class ListPhysictivityRecyclerAdapter : RecyclerView.Adapter<ListPhysictivityRec
     companion object {
         private val TAG = ListPhysictivityRecyclerAdapter::class.java.simpleName
 
-        private fun Physictivity.Type.toLocalizedString(ctx: Context): String {
-            val res = ctx.resources
-            val resId = res.getIdentifier(toString(), "string", ctx.packageName)
-
-            return res.getString(resId)
-        }
+        @StringRes
+        private fun Physictivity.Type.toStringResource(ctx: Context) =
+            ctx.resources.getIdentifier(toString(), "string", ctx.packageName)
     }
 }
