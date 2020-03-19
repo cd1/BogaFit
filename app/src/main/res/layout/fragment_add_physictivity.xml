@@ -87,6 +87,7 @@
             android:layout_marginBottom="@dimen/large_margin"
             android:text="@string/add_physictivity_add_button"
             android:onClick="@{actions::onAddPhysictivityButtonClick}"
+            android:theme="@style/AppTheme.MainButton"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

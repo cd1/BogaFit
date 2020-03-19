@@ -17,4 +17,8 @@
         <item name="android:windowSplashscreenContent">@drawable/splash_screen</item>
     </style>
 
+    <style name="AppTheme.MainButton">
+        <item name="android:backgroundTint">@color/secondaryColor</item>
+    </style>
+
 </resources>
