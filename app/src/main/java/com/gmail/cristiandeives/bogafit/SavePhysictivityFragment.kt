@@ -28,7 +28,7 @@ abstract class SavePhysictivityFragment : Fragment(),
     abstract val saveButtonText: Int
 
     private lateinit var binding: FragmentSavePhysictivityBinding
-    private val navController by lazy { findNavController() }
+    internal val navController by lazy { findNavController() }
     private var currentSnackbar: Snackbar? = null
 
     private val savePhysictivityProgressDialog by lazy {
@@ -143,7 +143,7 @@ abstract class SavePhysictivityFragment : Fragment(),
     }
 
     @UiThread
-    private fun displayErrorMessage(@StringRes messageRes: Int) {
+    internal fun displayErrorMessage(@StringRes messageRes: Int) {
         currentSnackbar = Snackbar.make(requireView(), messageRes, Snackbar.LENGTH_LONG).apply {
             show()
         }

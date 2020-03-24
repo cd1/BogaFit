@@ -39,6 +39,11 @@ class FirestoreRepository {
             .orderBy(PHYSICTIVITY_FIELD_DATE, Query.Direction.DESCENDING)
     }
 
+    fun deletePhysictivity(id: String): Task<*> {
+        Log.d(TAG, "deleting document [id=$id] from collection $PHYSICTIVITY_COLLECTION...")
+        return db.collection(PHYSICTIVITY_COLLECTION).document(id).delete()
+    }
+
     companion object {
         private const val PHYSICTIVITY_COLLECTION = "physictivity"
         const val PHYSICTIVITY_FIELD_DATE = "date"

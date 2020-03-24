@@ -10,6 +10,9 @@
     <string name="save_physictivity_loading_message">Saving physical activity…</string>
     <string name="save_physictivity_error_invalid_date">Please enter a date that is not in the future</string>
     <string name="save_physictivity_error_server">There was an error saving the physical activity. Try again later.</string>
+    <string name="save_physictivity_delete_menu">Delete</string>
+    <string name="save_physictivity_delete_loading_message">Deleting physical activity…</string>
+    <string name="save_physictivity_delete_error_server">There was an error deleting the physical activity. Try again later.</string>
 
     <string name="add_physictivity_title">Add physical activity</string>
     <string name="add_physictivity_save_button">Add</string>
