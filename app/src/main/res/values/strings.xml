@@ -5,13 +5,17 @@
     <string name="list_physictivities_loading_message">Loading physical activities information…</string>
     <string name="list_physictivities_count_label">Number of physical activities:</string>
 
+    <string name="save_physictivity_date_label">Date:</string>
+    <string name="save_physictivity_physictivity_label">Physical activity:</string>
+    <string name="save_physictivity_loading_message">Saving physical activity…</string>
+    <string name="save_physictivity_error_invalid_date">Please enter a date that is not in the future</string>
+    <string name="save_physictivity_error_server">There was an error saving the physical activity. Try again later.</string>
+
     <string name="add_physictivity_title">Add physical activity</string>
-    <string name="add_physictivity_date_label">Date:</string>
-    <string name="add_physictivity_physictivity_label">Physical activity:</string>
-    <string name="add_physictivity_add_button">Add</string>
-    <string name="add_physictivity_loading_message">Creating physical activity…</string>
-    <string name="add_physictivity_error_invalid_date">Please enter a date that is not in the future</string>
-    <string name="add_physictivity_error_server">There was an error adding the physical activity. Try again later.</string>
+    <string name="add_physictivity_save_button">Add</string>
+
+    <string name="edit_physictivity_title">Edit physical activity</string>
+    <string name="edit_physictivity_save_button">Edit</string>
 
     <string name="WEIGHT_LIFTING">Weight lifting</string>
     <string name="RUNNING">Running</string>

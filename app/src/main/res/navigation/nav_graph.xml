@@ -10,12 +10,27 @@
         <action
             android:id="@+id/to_add_physictivity"
             app:destination="@id/add_physictivity_fragment" />
+        <action
+            android:id="@+id/to_edit_physictivity"
+            app:destination="@id/edit_physictivity_fragment" />
     </fragment>
 
     <fragment
         android:id="@+id/add_physictivity_fragment"
         android:name="com.gmail.cristiandeives.bogafit.AddPhysictivityFragment"
-        android:label="@string/add_physictivity_title" >
+        android:label="@string/add_physictivity_title">
+        <action
+            android:id="@+id/to_date_picker"
+            app:destination="@id/date_picker_dialog_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/edit_physictivity_fragment"
+        android:name="com.gmail.cristiandeives.bogafit.EditPhysictivityFragment"
+        android:label="@string/edit_physictivity_title">
+        <argument
+            android:name="physictivity"
+            app:argType="com.gmail.cristiandeives.bogafit.data.Physictivity" />
         <action
             android:id="@+id/to_date_picker"
             app:destination="@id/date_picker_dialog_fragment" />

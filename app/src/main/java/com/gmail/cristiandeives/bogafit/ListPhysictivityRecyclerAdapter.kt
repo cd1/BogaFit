@@ -1,9 +1,11 @@
 package com.gmail.cristiandeives.bogafit
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.gmail.cristiandeives.bogafit.data.Physictivity
@@ -40,6 +42,13 @@ class ListPhysictivityRecyclerAdapter : RecyclerView.Adapter<ListPhysictivityRec
         holder.binding.apply {
             typeText.setText(physictivity.type?.toStringResource(context) ?: R.string.unknown_physictivity)
             dateText.text = dateFormatter.format(physictivity.date)
+
+            root.setOnClickListener {
+                Log.i(TAG, "user tapped physictivity with ID=${physictivity.id}")
+                val action = ListPhysictivityFragmentDirections.toEditPhysictivity(physictivity)
+
+                root.findNavController().navigate(action)
+            }
         }
     }
 
@@ -58,6 +67,8 @@ class ListPhysictivityRecyclerAdapter : RecyclerView.Adapter<ListPhysictivityRec
     }
 
     companion object {
+        private val TAG = ListPhysictivityRecyclerAdapter::class.java.simpleName
+
         @StringRes
         private fun Physictivity.Type.toStringResource(ctx: Context) =
             ctx.resources.getIdentifier(toString(), "string", ctx.packageName)
