@@ -10,25 +10,21 @@ import com.gmail.cristiandeives.bogafit.data.Physictivity
 import java.time.LocalDate
 
 @MainThread
-class EditPhysictivityViewModel(app: Application) : SavePhysictivityViewModel(app) {
-    private var id: String = ""
+class EditPhysictivityViewModel(app: Application, existingPhysictivity: Physictivity) : SavePhysictivityViewModel(app) {
+    private var id = existingPhysictivity.id
 
     private val _deletePhysictivityStatus = MutableLiveData<Resource<Any>>()
     val deletePhysictivityStatus: LiveData<Resource<Any>> = _deletePhysictivityStatus
 
     override val saveButtonText = getApplication<Application>().getString(R.string.edit_physictivity_save_button)
 
+    init {
+        date.value = existingPhysictivity.date
+        type.value = existingPhysictivity.type
+    }
+
     override fun runSaveTask(date: LocalDate, type: Physictivity.Type) =
         repo.editPhysictivity(id, date, type)
-
-    @UiThread
-    fun syncWith(physictivity: Physictivity) {
-        Log.d(TAG, "syncing viewmodel data with existing physictivity [$physictivity]")
-
-        id = physictivity.id
-        date.value = physictivity.date
-        type.value = physictivity.type
-    }
 
     @UiThread
     fun deletePhysictivity() {

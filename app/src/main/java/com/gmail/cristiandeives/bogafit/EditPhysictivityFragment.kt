@@ -18,7 +18,7 @@ class EditPhysictivityFragment : SavePhysictivityFragment() {
     private val args by navArgs<EditPhysictivityFragmentArgs>()
 
     override val viewModel by viewModels<EditPhysictivityViewModel>(factoryProducer = {
-        ViewModelFactory(requireActivity().application)
+        ViewModelFactory(requireActivity().application, args.physictivity)
     })
 
     private val deletePhysictivityProgressDialog by lazy {
@@ -34,25 +34,21 @@ class EditPhysictivityFragment : SavePhysictivityFragment() {
 
         setHasOptionsMenu(true)
 
-        viewModel.apply {
-            syncWith(args.physictivity)
+        viewModel.deletePhysictivityStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
+            Log.v(TAG, "> deletePhysictivityState#onChanged(t=$res)")
 
-            deletePhysictivityStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
-                Log.v(TAG, "> deletePhysictivityState#onChanged(t=$res)")
-
-                when (res) {
-                    is Resource.Loading -> onDeletePhysictivityLoading()
-                    is Resource.Success -> onDeletePhysictivitySuccess()
-                    is Resource.Error -> onDeletePhysictivityError()
-                    is Resource.Canceled -> onDeletePhysictivityCanceled()
-                }
-
-                if (res?.isFinished == true) {
-                    deletePhysictivityProgressDialog.dismiss()
-                }
-
-                Log.v(TAG, "< deletePhysictivityState#onChanged(t=$res)")
+            when (res) {
+                is Resource.Loading -> onDeletePhysictivityLoading()
+                is Resource.Success -> onDeletePhysictivitySuccess()
+                is Resource.Error -> onDeletePhysictivityError()
+                is Resource.Canceled -> onDeletePhysictivityCanceled()
             }
+
+            if (res?.isFinished == true) {
+                deletePhysictivityProgressDialog.dismiss()
+            }
+
+            Log.v(TAG, "< deletePhysictivityState#onChanged(t=$res)")
         }
 
         Log.v(TAG, "< onViewCreated(...)")
