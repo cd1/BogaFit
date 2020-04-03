@@ -17,8 +17,9 @@ import androidx.navigation.fragment.navArgs
 class EditPhysictivityFragment : SavePhysictivityFragment() {
     private val args by navArgs<EditPhysictivityFragmentArgs>()
 
-    override val viewModel by viewModels<EditPhysictivityViewModel>()
-    override val saveButtonText = R.string.edit_physictivity_save_button
+    override val viewModel by viewModels<EditPhysictivityViewModel>(factoryProducer = {
+        ViewModelFactory(requireActivity().application)
+    })
 
     private val deletePhysictivityProgressDialog by lazy {
         ProgressDialog(requireContext()).apply {

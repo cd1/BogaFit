@@ -1,5 +1,6 @@
 package com.gmail.cristiandeives.bogafit
 
+import android.app.Application
 import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.UiThread
@@ -9,11 +10,13 @@ import com.gmail.cristiandeives.bogafit.data.Physictivity
 import java.time.LocalDate
 
 @MainThread
-class EditPhysictivityViewModel : SavePhysictivityViewModel() {
+class EditPhysictivityViewModel(app: Application) : SavePhysictivityViewModel(app) {
     private var id: String = ""
 
     private val _deletePhysictivityStatus = MutableLiveData<Resource<Any>>()
     val deletePhysictivityStatus: LiveData<Resource<Any>> = _deletePhysictivityStatus
+
+    override val saveButtonText = getApplication<Application>().getString(R.string.edit_physictivity_save_button)
 
     override fun runSaveTask(date: LocalDate, type: Physictivity.Type) =
         repo.editPhysictivity(id, date, type)

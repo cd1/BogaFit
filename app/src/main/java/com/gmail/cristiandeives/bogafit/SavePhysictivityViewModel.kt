@@ -1,19 +1,22 @@
 package com.gmail.cristiandeives.bogafit
 
+import android.app.Application
 import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.UiThread
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.gmail.cristiandeives.bogafit.data.FirestoreRepository
 import com.gmail.cristiandeives.bogafit.data.Physictivity
 import com.google.android.gms.tasks.Task
 import java.time.LocalDate
 
 @MainThread
-abstract class SavePhysictivityViewModel : ViewModel() {
+abstract class SavePhysictivityViewModel(app: Application) : AndroidViewModel(app) {
     internal val repo = FirestoreRepository.getInstance()
+
+    abstract val saveButtonText: String
 
     private val _savePhysictivityStatus = MutableLiveData<Resource<Physictivity>>()
     val savePhysictivityStatus: LiveData<Resource<Physictivity>> = _savePhysictivityStatus

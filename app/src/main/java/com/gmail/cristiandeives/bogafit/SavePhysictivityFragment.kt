@@ -25,7 +25,6 @@ abstract class SavePhysictivityFragment : Fragment(),
     SavePhysictivityActionHandler {
 
     abstract val viewModel: SavePhysictivityViewModel
-    abstract val saveButtonText: Int
 
     private lateinit var binding: FragmentSavePhysictivityBinding
     internal val navController by lazy { findNavController() }
@@ -58,11 +57,8 @@ abstract class SavePhysictivityFragment : Fragment(),
         Log.v(TAG, "> onViewCreated(...)")
         super.onViewCreated(view, savedInstanceState)
 
-        binding.apply {
-            activitySpinner.adapter = PhysictivityTypeSpinnerAdapter(requireContext()).apply {
-                data = Physictivity.Type.values()
-            }
-            saveButton.setText(saveButtonText)
+        binding.activitySpinner.adapter = PhysictivityTypeSpinnerAdapter(requireContext()).apply {
+            data = Physictivity.Type.values()
         }
 
         viewModel.apply {

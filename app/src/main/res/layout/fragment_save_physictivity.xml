@@ -85,6 +85,7 @@
             android:layout_marginEnd="@dimen/large_margin"
             android:layout_marginTop="@dimen/large_margin"
             android:layout_marginBottom="@dimen/large_margin"
+            android:text="@{vm.saveButtonText}"
             android:theme="@style/AppTheme.MainButton"
             android:onClick="@{actions::onSaveButtonClick}"
             app:layout_constraintBottom_toBottomOf="parent"
