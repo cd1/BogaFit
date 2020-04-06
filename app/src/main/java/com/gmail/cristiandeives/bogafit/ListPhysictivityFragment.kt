@@ -100,7 +100,7 @@ class ListPhysictivityFragment : Fragment(),
 
     @UiThread
     private fun onListPhysictivitiesCanceled() {
-
+        // nothing
     }
 
     companion object {

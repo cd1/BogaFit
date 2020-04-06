@@ -29,6 +29,7 @@ class EditPhysictivityFragment : SavePhysictivityFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.v(TAG, "> onViewCreated(...)")
         super.onViewCreated(view, savedInstanceState)
 
         setHasOptionsMenu(true)
@@ -53,6 +54,8 @@ class EditPhysictivityFragment : SavePhysictivityFragment() {
                 Log.v(TAG, "< deletePhysictivityState#onChanged(t=$res)")
             }
         }
+
+        Log.v(TAG, "< onViewCreated(...)")
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
