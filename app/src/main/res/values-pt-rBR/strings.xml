@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">Boga Fit</string>
 
+    <string name="list_physictivities_current_user_loading_message">Inicializando o app…</string>
+    <string name="list_physictivities_current_user_error_server">Houve um erro ao inicializar o app. Tente novamente mais tarde.</string>
     <string name="list_physictivities_loading_message">Carregando informações de atividades físicas…</string>
     <string name="list_physictivities_error_server">Houve um erro ao carregar as atividades físicas. Tente novamente mais tarde.</string>
     <string name="list_physictivities_count_label">Quantidade de atividades físicas:</string>
