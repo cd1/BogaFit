@@ -21,7 +21,9 @@ class DatePickerDialogFragment : DialogFragment() {
             args.year,
             args.month,
             args.dayOfMonth
-        )
+        ).apply {
+            datePicker.maxDate = System.currentTimeMillis()
+        }
 
         Log.v(TAG, "< onCreateDialog(...): $dialog")
         return dialog

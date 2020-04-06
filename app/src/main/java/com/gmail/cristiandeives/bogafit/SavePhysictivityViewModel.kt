@@ -33,13 +33,6 @@ abstract class SavePhysictivityViewModel(app: Application) : AndroidViewModel(ap
         _savePhysictivityStatus.value = Resource.Loading()
 
         val actualDate = date.value ?: LocalDate.now()
-
-        if (actualDate > LocalDate.now()) {
-            Log.d(TAG, "cannot save physictivity: date is in the future [$actualDate]")
-            _savePhysictivityStatus.value = Resource.Error(Error.InvalidDate())
-            return
-        }
-
         val actualType = type.value ?: Physictivity.Type.WEIGHT_LIFTING
 
         runSaveTask(actualDate, actualType).addOnSuccessListener {
@@ -58,7 +51,6 @@ abstract class SavePhysictivityViewModel(app: Application) : AndroidViewModel(ap
     abstract fun runSaveTask(date: LocalDate, type: Physictivity.Type): Task<*>
 
     sealed class Error : RuntimeException() {
-        class InvalidDate : Error()
         class Server : Error()
     }
 

@@ -28,7 +28,6 @@ abstract class SavePhysictivityFragment : Fragment(),
 
     private lateinit var binding: FragmentSavePhysictivityBinding
     internal val navController by lazy { findNavController() }
-    private var currentSnackbar: Snackbar? = null
 
     private val savePhysictivityProgressDialog by lazy {
         ProgressDialog(requireContext()).apply {
@@ -125,7 +124,6 @@ abstract class SavePhysictivityFragment : Fragment(),
     private fun onSavePhysictivityError(res: Resource.Error<*>) {
         res.exception?.consume()?.let { ex ->
             val message = when (ex as SavePhysictivityViewModel.Error) {
-                is SavePhysictivityViewModel.Error.InvalidDate -> R.string.save_physictivity_error_invalid_date
                 is SavePhysictivityViewModel.Error.Server -> R.string.save_physictivity_error_server
             }
 
@@ -140,9 +138,7 @@ abstract class SavePhysictivityFragment : Fragment(),
 
     @UiThread
     internal fun displayErrorMessage(@StringRes messageRes: Int) {
-        currentSnackbar = Snackbar.make(requireView(), messageRes, Snackbar.LENGTH_LONG).apply {
-            show()
-        }
+        Snackbar.make(requireView(), messageRes, Snackbar.LENGTH_LONG).show()
     }
 
     companion object {
