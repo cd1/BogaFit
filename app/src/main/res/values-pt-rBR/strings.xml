@@ -3,6 +3,7 @@
     <string name="app_name">Boga Fit</string>
 
     <string name="list_physictivities_loading_message">Carregando informações de atividades físicas…</string>
+    <string name="list_physictivities_error_server">Houve um erro ao carregar as atividades físicas. Tente novamente mais tarde.</string>
     <string name="list_physictivities_count_label">Quantidade de atividades físicas:</string>
 
     <string name="save_physictivity_date_label">Data:</string>

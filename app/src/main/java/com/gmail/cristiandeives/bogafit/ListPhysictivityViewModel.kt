@@ -28,7 +28,7 @@ class ListPhysictivityViewModel : ViewModel() {
         repo.getPhysictivitiesQuery().addSnapshotListener { snap, ex ->
             if (ex != null) {
                 Log.w(TAG, "read physictivities failed [${ex.message})", ex)
-                _listPhysictivitiesStatus.value = Resource.Error(ex)
+                _listPhysictivitiesStatus.value = Resource.Error(Error.Server())
                 return@addSnapshotListener
             }
 
@@ -41,6 +41,10 @@ class ListPhysictivityViewModel : ViewModel() {
                 _listPhysictivitiesStatus.value = Resource.Success(physictivities)
             }
         }
+    }
+
+    sealed class Error : RuntimeException() {
+        class Server : Error()
     }
 
     companion object {
