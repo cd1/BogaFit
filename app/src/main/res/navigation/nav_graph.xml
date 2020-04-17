@@ -8,6 +8,7 @@
         android:name="com.gmail.cristiandeives.bogafit.ListPhysictivityFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_list_physictivity">
+
         <action
             android:id="@+id/to_add_physictivity"
             app:destination="@id/add_physictivity_fragment" />
@@ -19,8 +20,9 @@
     <fragment
         android:id="@+id/add_physictivity_fragment"
         android:name="com.gmail.cristiandeives.bogafit.AddPhysictivityFragment"
-        tools:layout="@layout/fragment_save_physictivity"
-        android:label="@string/add_physictivity_title">
+        android:label="@string/add_physictivity_title"
+        tools:layout="@layout/fragment_save_physictivity">
+
         <action
             android:id="@+id/to_date_picker"
             app:destination="@id/date_picker_dialog_fragment" />
@@ -29,8 +31,9 @@
     <fragment
         android:id="@+id/edit_physictivity_fragment"
         android:name="com.gmail.cristiandeives.bogafit.EditPhysictivityFragment"
-        tools:layout="@layout/fragment_save_physictivity"
-        android:label="@string/edit_physictivity_title">
+        android:label="@string/edit_physictivity_title"
+        tools:layout="@layout/fragment_save_physictivity">
+
         <argument
             android:name="physictivity"
             app:argType="com.gmail.cristiandeives.bogafit.data.Physictivity" />
@@ -42,7 +45,8 @@
     <dialog
         android:id="@+id/date_picker_dialog_fragment"
         android:name="com.gmail.cristiandeives.bogafit.DatePickerDialogFragment"
-        android:label="DatePickerDialogFragment" >
+        android:label="DatePickerDialogFragment">
+
         <argument
             android:name="year"
             app:argType="integer" />

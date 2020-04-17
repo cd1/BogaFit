@@ -62,7 +62,7 @@ abstract class SavePhysictivityFragment : Fragment(),
 
         viewModel.apply {
             savePhysictivityStatus.observe(viewLifecycleOwner) { res: Resource<Physictivity>? ->
-                Log.v(TAG, "> savePhysictivityState#onChanged(t=$res)")
+                Log.v(TAG, "> savePhysictivityStatus#onChanged(t=$res)")
 
                 when (res) {
                     is Resource.Loading -> onSavePhysictivityLoading()
@@ -75,7 +75,7 @@ abstract class SavePhysictivityFragment : Fragment(),
                     savePhysictivityProgressDialog.dismiss()
                 }
 
-                Log.v(TAG, "< savePhysictivityState#onChanged(t=$res)")
+                Log.v(TAG, "< savePhysictivityStatus#onChanged(t=$res)")
             }
         }
 
