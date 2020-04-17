@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable name="vm" type="com.gmail.cristiandeives.bogafit.SignUpViewModel" />
+        <variable name="action" type="com.gmail.cristiandeives.bogafit.SignUpActionHandler" />
+    </data>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/email_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                android:text="@string/sign_in_email_label"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:labelFor="@id/email_edit"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/email_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                android:text="@={vm.email}"
+                android:inputType="textEmailAddress"
+                android:autofillHints="emailAddress"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/email_text"
+                tools:text="johnsmith@example.com" />
+
+            <TextView
+                android:id="@+id/password_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                android:text="@string/sign_in_password_label"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                android:labelFor="@id/password_edit"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/email_edit" />
+
+            <EditText
+                android:id="@+id/password_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                android:text="@={vm.password}"
+                android:inputType="textPassword"
+                android:autofillHints="newPassword"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/password_text"
+                tools:text="password123" />
+
+            <Button
+                android:id="@+id/sign_up_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginBottom="@dimen/large_margin"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                android:enabled="@{vm.isSignUpReady}"
+                android:onClick="@{action::onSignUpButtonClick}"
+                android:text="@string/sign_up_title"
+                android:theme="@style/AppTheme.MainButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/password_edit" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

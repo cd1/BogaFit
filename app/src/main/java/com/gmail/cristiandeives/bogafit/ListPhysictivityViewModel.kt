@@ -3,61 +3,53 @@ package com.gmail.cristiandeives.bogafit
 import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.UiThread
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gmail.cristiandeives.bogafit.data.FirestoreRepository
 import com.gmail.cristiandeives.bogafit.data.Physictivity
 import com.gmail.cristiandeives.bogafit.data.toPhysictivity
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.ListenerRegistration
 
 @MainThread
-class ListPhysictivityViewModel : ViewModel() {
+class ListPhysictivityViewModel : ViewModel(),
+    DefaultLifecycleObserver {
+
     private val repo = FirestoreRepository.getInstance()
-    private val auth = FirebaseAuth.getInstance()
 
     private val _listPhysictivitiesStatus = MutableLiveData<Resource<List<Physictivity>>>()
     val listPhysictivityStatus = _listPhysictivitiesStatus
 
-    private val _currentUserStatus = MutableLiveData<Resource<*>>().apply {
-        value = auth.currentUser?.let { Resource.Success<Any>() }
+    private var physictivitiesQueryListener: ListenerRegistration? = null
+
+    override fun onCreate(owner: LifecycleOwner) {
+        Log.v(TAG, "> onCreate(...)")
+
+        startListeningToPhysictivities()
+
+        Log.v(TAG, "< onCreate(...)")
     }
-    val currentUserStatus: LiveData<Resource<*>> = _currentUserStatus
 
-    init {
-        if (_currentUserStatus.value == null) {
-            signInAnonymous()
-        }
-    }
+    override fun onDestroy(owner: LifecycleOwner) {
+        Log.v(TAG, "> onDestroy(...)")
 
-    @UiThread
-    private fun signInAnonymous() {
-        Log.d(TAG, "signing in with an anonymous account...")
-        _currentUserStatus.value = Resource.Loading<Any>()
+        stopListeningToPhysictivities()
 
-        auth.signInAnonymously().addOnSuccessListener { result ->
-            val uid = result.user?.uid.orEmpty()
-            Log.d(TAG, "user is now signed in (UID=$uid)")
-            _currentUserStatus.value = Resource.Success<Any>()
-        }.addOnFailureListener {  ex ->
-            Log.w(TAG, "anonymous sign in failed: ${ex.message}", ex)
-            _currentUserStatus.value = Resource.Error<Any>(ex)
-        }.addOnCanceledListener {
-            Log.d(TAG, "anonymous sign in canceled")
-            _currentUserStatus.value = Resource.Canceled<Any>()
-        }
+        Log.v(TAG, "< onDestroy(...)")
     }
 
     @UiThread
-    fun listenToPhysictivities() {
-        if (_listPhysictivitiesStatus.value != null) {
+    private fun startListeningToPhysictivities() {
+        if (physictivitiesQueryListener != null) {
+            Log.d(TAG, "we're already listening to physictivities; don't listen again")
             return
         }
 
         _listPhysictivitiesStatus.value = Resource.Loading()
 
-        repo.getPhysictivitiesQuery().addSnapshotListener { snap, ex ->
+        physictivitiesQueryListener = repo.getPhysictivitiesQuery().addSnapshotListener { snap, ex ->
             if (ex != null) {
                 Log.w(TAG, "read physictivities failed [${ex.message})", ex)
                 _listPhysictivitiesStatus.value = Resource.Error(Error.Server())
@@ -73,6 +65,12 @@ class ListPhysictivityViewModel : ViewModel() {
                 _listPhysictivitiesStatus.value = Resource.Success(physictivities)
             }
         }
+    }
+
+    @UiThread
+    private fun stopListeningToPhysictivities() {
+        physictivitiesQueryListener?.remove()
+        physictivitiesQueryListener = null
     }
 
     sealed class Error : RuntimeException() {

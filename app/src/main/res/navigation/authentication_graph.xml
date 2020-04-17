@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/authentication_graph"
+    app:startDestination="@id/sign_in_fragment">
+
+    <fragment
+        android:id="@+id/sign_in_fragment"
+        android:name="com.gmail.cristiandeives.bogafit.SignInFragment"
+        android:label="@string/sign_in_title"
+        tools:layout="@layout/fragment_sign_in">
+
+        <action
+            android:id="@+id/to_sign_up"
+            app:destination="@id/sign_up_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/sign_up_fragment"
+        android:name="com.gmail.cristiandeives.bogafit.SignUpFragment"
+        android:label="@string/sign_up_title"
+        tools:layout="@layout/fragment_sign_up" />
+</navigation>

@@ -6,7 +6,7 @@
     <fragment
         android:id="@+id/list_physictivity_fragment"
         android:name="com.gmail.cristiandeives.bogafit.ListPhysictivityFragment"
-        android:label="@string/app_name"
+        android:label="@string/list_physictivities_title"
         tools:layout="@layout/fragment_list_physictivity">
 
         <action
@@ -57,4 +57,10 @@
             android:name="dayOfMonth"
             app:argType="integer" />
     </dialog>
+
+    <fragment
+        android:id="@+id/profile_fragment"
+        android:name="com.gmail.cristiandeives.bogafit.ProfileFragment"
+        android:label="@string/profile_title"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

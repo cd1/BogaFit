@@ -36,13 +36,6 @@ class ListPhysictivityFragment : Fragment(),
         }
     }
 
-    private val currentUserProgressDialog by lazy {
-        ProgressDialog(requireContext()).apply {
-            setMessage(getString(R.string.list_physictivities_current_user_loading_message))
-            setCancelable(false)
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Log.v(TAG, "> onCreateView(...)")
 
@@ -57,6 +50,8 @@ class ListPhysictivityFragment : Fragment(),
         Log.v(TAG, "> onViewCreated(...)")
         super.onViewCreated(view, savedInstanceState)
 
+        lifecycle.addObserver(viewModel)
+
         binding.apply {
             action = this@ListPhysictivityFragment
 
@@ -65,23 +60,6 @@ class ListPhysictivityFragment : Fragment(),
         }
 
         viewModel.apply {
-            currentUserStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
-                Log.v(TAG, "> currentUserStatus#onChanged(t=$res)")
-
-                when (res) {
-                    is Resource.Loading -> onCurrentUserLoading()
-                    is Resource.Success -> onCurrentUserSuccess()
-                    is Resource.Error -> onCurrentUserError(res)
-                    is Resource.Canceled -> onCurrentUserCanceled()
-                }
-
-                if (res?.isFinished == true) {
-                    currentUserProgressDialog.dismiss()
-                }
-
-                Log.v(TAG, "< currentUserStatus#onChanged(t=$res)")
-            }
-
             listPhysictivityStatus.observe(viewLifecycleOwner) { res: Resource<List<Physictivity>>? ->
                 Log.v(TAG, "> listPhysictivitiesStatus#onChanged(t=$res)")
 
@@ -103,35 +81,18 @@ class ListPhysictivityFragment : Fragment(),
         Log.v(TAG, "< onViewCreated(...)")
     }
 
+    override fun onDestroyView() {
+        Log.v(TAG, "> onDestroyView()")
+        super.onDestroyView()
+
+        lifecycle.removeObserver(viewModel)
+
+        Log.v(TAG, "< onDestroyView()")
+    }
+
     override fun onAddPhysictivityButtonClick(view: View) {
         val action = ListPhysictivityFragmentDirections.toAddPhysictivity()
         navController.navigate(action)
-    }
-
-    @UiThread
-    private fun onCurrentUserLoading() {
-        currentUserProgressDialog.show()
-    }
-
-    @UiThread
-    private fun onCurrentUserSuccess() {
-        viewModel.listenToPhysictivities()
-    }
-
-    @UiThread
-    private fun onCurrentUserError(res: Resource.Error<*>) {
-        res.exception?.consume()?.let { ex ->
-            val message = when (ex as ListPhysictivityViewModel.Error) {
-                is ListPhysictivityViewModel.Error.Server -> R.string.list_physictivities_current_user_error_server
-            }
-
-            displayErrorMessage(message)
-        }
-    }
-
-    @UiThread
-    private fun onCurrentUserCanceled() {
-        // nothing
     }
 
     @UiThread

@@ -14,7 +14,7 @@ class FirestoreRepository {
     private val auth = FirebaseAuth.getInstance()
 
     fun addPhysictivity(date: LocalDate, type: Physictivity.Type): Task<DocumentReference> {
-        val uid = auth.currentUser?.uid ?: throw IllegalStateException("there is no signed in user")
+        val uid = auth.currentUser?.uid ?: throw IllegalStateException("there is no authenticated user")
 
         val data = mapOf(
             PHYSICTIVITY_UID to uid,
@@ -39,7 +39,7 @@ class FirestoreRepository {
     }
 
     fun getPhysictivitiesQuery(): Query {
-        val uid = auth.currentUser?.uid ?: throw IllegalStateException("there is no signed in user")
+        val uid = auth.currentUser?.uid ?: throw IllegalStateException("there is no authenticated user")
 
         Log.d(TAG, "querying documents from collection $PHYSICTIVITY_COLLECTION with UID=$uid")
         return db.collection(PHYSICTIVITY_COLLECTION)

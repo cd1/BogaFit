@@ -2,8 +2,25 @@
 <resources>
     <string name="app_name">Boga Fit</string>
 
-    <string name="list_physictivities_current_user_loading_message">Inicializando o app…</string>
-    <string name="list_physictivities_current_user_error_server">Houve um erro ao inicializar o app. Tente novamente mais tarde.</string>
+    <string name="physictivities_navigation_title">Atividades</string>
+    <string name="profile_navigation_title">Perfil</string>
+
+    <string name="sign_in_title">Conectar</string>
+    <string name="sign_in_email_label">E-mail:</string>
+    <string name="sign_in_password_label">Senha:</string>
+    <string name="sign_in_sign_up_button">Ainda não tenho uma conta</string>
+    <string name="sign_in_loading_message">Conectando…</string>
+    <string name="sign_in_error_missing_email">Digite um endereço de e-mail</string>
+    <string name="sign_in_error_invalid_email">Digite um endereço de e-mail válido</string>
+    <string name="sign_in_error_missing_password">Digite uma senha</string>
+    <string name="sign_in_error_invalid_credentials">O e-mail e a senha não batem. Por favor, verifique se você digitou os dados corretamente.</string>
+    <string name="sign_in_error_server">Houve um erro ao conectar. Por favor, tente novamente mais tarde.</string>
+
+    <string name="sign_up_title">Cadastrar</string>
+    <string name="sign_up_loading_message">Cadastrando…</string>
+    <string name="sign_up_error_server">Houve um erro ao cadastrar. Por favor, tente novamente mais tarde.</string>
+
+    <string name="list_physictivities_title">Atividades físicas</string>
     <string name="list_physictivities_loading_message">Carregando informações de atividades físicas…</string>
     <string name="list_physictivities_error_server">Houve um erro ao carregar as atividades físicas. Tente novamente mais tarde.</string>
     <string name="list_physictivities_count_label">Quantidade de atividades físicas:</string>
@@ -21,6 +38,10 @@
 
     <string name="edit_physictivity_title">Alterar atividade física</string>
     <string name="edit_physictivity_save_button">Alterar</string>
+
+    <string name="profile_title">Meu perfil</string>
+    <string name="profile_name_label">Nome:</string>
+    <string name="profile_sign_out_button">Desconectar</string>
 
     <string name="WEIGHT_LIFTING">Musculação</string>
     <string name="RUNNING">Corrida</string>

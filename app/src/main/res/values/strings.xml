@@ -2,8 +2,25 @@
 <resources>
     <string name="app_name">Boga Fit</string>
 
-    <string name="list_physictivities_current_user_loading_message">Initializing app…</string>
-    <string name="list_physictivities_current_user_error_server">There was an error intializing the app. Try again later.</string>
+    <string name="physictivities_navigation_title">Activities</string>
+    <string name="profile_navigation_title">Profile</string>
+
+    <string name="sign_in_title">Sign in</string>
+    <string name="sign_in_email_label">E-mail:</string>
+    <string name="sign_in_password_label">Password:</string>
+    <string name="sign_in_sign_up_button">I don\'t have an account yet</string>
+    <string name="sign_in_loading_message">Signing in…</string>
+    <string name="sign_in_error_missing_email">Enter an e-mail address</string>
+    <string name="sign_in_error_invalid_email">Enter a valid e-mail address</string>
+    <string name="sign_in_error_missing_password">Enter a password</string>
+    <string name="sign_in_error_invalid_credentials">The e-mail and password don\'t match. Please make sure you entered them correctly.</string>
+    <string name="sign_in_error_server">There was an error signing in. Please try again later.</string>
+
+    <string name="sign_up_title">Sign up</string>
+    <string name="sign_up_loading_message">Signing up…</string>
+    <string name="sign_up_error_server">There was an error signing up. Please try again later.</string>
+
+    <string name="list_physictivities_title">Physical activities</string>
     <string name="list_physictivities_loading_message">Loading physical activities information…</string>
     <string name="list_physictivities_error_server">There was an error loading the physical activities. Try again later.</string>
     <string name="list_physictivities_count_label">Number of physical activities:</string>
@@ -21,6 +38,10 @@
 
     <string name="edit_physictivity_title">Edit physical activity</string>
     <string name="edit_physictivity_save_button">Edit</string>
+
+    <string name="profile_title">My profile</string>
+    <string name="profile_name_label">Name:</string>
+    <string name="profile_sign_out_button">Sign out</string>
 
     <string name="WEIGHT_LIFTING">Weight lifting</string>
     <string name="RUNNING">Running</string>

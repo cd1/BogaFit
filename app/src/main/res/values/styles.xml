@@ -16,8 +16,16 @@
         <item name="android:windowSplashscreenContent">@drawable/splash_screen</item>
     </style>
 
-    <style name="AppTheme.MainButton">
-        <item name="android:backgroundTint">@color/secondaryColor</item>
+    <style name="AppTheme.MainButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@drawable/main_button_background</item>
     </style>
 
+    <style name="AppTheme.DangerousButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">?attr/colorError</item>
+        <item name="android:textColor">?attr/colorOnError</item>
+    </style>
+
+    <style name="AppTheme.LabelText" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Caption</item>
+    </style>
 </resources>
