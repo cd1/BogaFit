@@ -1,13 +1,11 @@
 package com.gmail.cristiandeives.bogafit
 
-import android.app.DatePickerDialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.annotation.UiThread
@@ -16,12 +14,17 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.gmail.cristiandeives.bogafit.data.Physictivity
 import com.gmail.cristiandeives.bogafit.databinding.FragmentSavePhysictivityBinding
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener
 import com.google.android.material.snackbar.Snackbar
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneOffset
 
 @MainThread
 abstract class SavePhysictivityFragment : Fragment(),
-    DatePickerDialog.OnDateSetListener,
+    MaterialPickerOnPositiveButtonClickListener<Long>,
     SavePhysictivityActionHandler {
 
     abstract val viewModel: SavePhysictivityViewModel
@@ -82,26 +85,33 @@ abstract class SavePhysictivityFragment : Fragment(),
         Log.v(TAG, "< onViewCreated(...)")
     }
 
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        Log.v(TAG, "> onDateSet(view=..., year=$year, month=$month, dayOfMonth=$dayOfMonth)")
+    override fun onPositiveButtonClick(selection: Long) {
+        Log.v(TAG, "> onPositiveButtonClick(selection=$selection)")
 
-        Log.i(TAG, "user selected date=%04d-%02d-%02d".format(year, month + 1, dayOfMonth))
-        viewModel.date.value = LocalDate.of(year, month + 1, dayOfMonth)
+        val selectionDate = Instant.ofEpochMilli(selection).atZone(ZoneOffset.UTC).toLocalDate()
+        Log.i(TAG, "user selected date=$selectionDate")
+        viewModel.date.value = selectionDate
 
-        Log.v(TAG, "< onDateSet(view=..., year=$year, month=$month, dayOfMonth=$dayOfMonth)")
+        Log.v(TAG, "< onPositiveButtonClick(selection=$selection)")
     }
 
     override fun onDateSelectButtonClick(view: View) {
         Log.i(TAG, "user started to select date")
 
         val date = viewModel.date.value ?: LocalDate.now()
+        val dateUtcMilli = date.atStartOfDay().atZone(ZoneOffset.UTC).toInstant().toEpochMilli()
 
-        val action = AddPhysictivityFragmentDirections.toDatePicker(
-            date.year,
-            date.monthValue - 1,
-            date.dayOfMonth
-        )
-        navController.navigate(action)
+        val constraints = CalendarConstraints.Builder()
+            .setOpenAt(dateUtcMilli)
+            .setEnd(MaterialDatePicker.thisMonthInUtcMilliseconds())
+            .setValidator(MaxDateValidator.untilToday())
+            .build()
+        val picker = MaterialDatePicker.Builder.datePicker()
+            .setSelection(dateUtcMilli)
+            .setCalendarConstraints(constraints)
+            .build()
+        picker.addOnPositiveButtonClickListener(this)
+        picker.show(parentFragmentManager, picker.toString())
     }
 
     override fun onSaveButtonClick(view: View) {
