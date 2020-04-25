@@ -8,6 +8,7 @@
     <string name="sign_in_title">Sign in</string>
     <string name="sign_in_email_label">E-mail</string>
     <string name="sign_in_password_label">Password</string>
+    <string name="sign_in_next_button">Next</string>
     <string name="sign_in_sign_up_button">I don\'t have an account yet</string>
     <string name="sign_in_loading_message">Signing in…</string>
     <string name="sign_in_error_missing_email">Enter an e-mail address</string>

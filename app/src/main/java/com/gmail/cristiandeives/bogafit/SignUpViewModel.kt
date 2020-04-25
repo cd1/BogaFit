@@ -1,7 +1,7 @@
 package com.gmail.cristiandeives.bogafit
 
 import android.util.Log
-import android.util.Patterns
+import androidx.annotation.UiThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,36 +15,40 @@ class SignUpViewModel : ViewModel() {
     var email = MutableLiveData<String>()
     var password = MutableLiveData<String>()
 
-    private val _isSignUpReady = MediatorLiveData<Boolean>().apply {
+    private val _canSignUp = MediatorLiveData<Boolean>().apply {
         val signUpFieldObserver = Observer<String> {
-            value = (!email.value.isNullOrBlank()) && (!password.value.isNullOrBlank())
+            value = try {
+                SignInViewModel.validateEmail(email.value.orEmpty())
+                SignInPasswordViewModel.validatePassword(password.value.orEmpty())
+                true
+            } catch (ex: Error) {
+                false
+            }
         }
 
         addSource(email, signUpFieldObserver)
         addSource(password, signUpFieldObserver)
     }
-    val isSignUpReady: LiveData<Boolean> = _isSignUpReady
+    val canSignUp: LiveData<Boolean> = _canSignUp
 
     private val _signUpStatus = MutableLiveData<Resource<*>>()
     val signUpStatus: LiveData<Resource<*>> = _signUpStatus
 
+    @UiThread
     fun signUp() {
         _signUpStatus.value = Resource.Loading<Any>()
 
-        val actualEmail = email.value?.trim()
-        if (actualEmail.isNullOrEmpty()) {
-            _signUpStatus.value = Resource.Error<Any>(Error.MissingEmail())
+        val actualEmail = try {
+            SignInViewModel.validateEmail(email.value.orEmpty())
+        } catch (ex: Error) {
+            _signUpStatus.value = Resource.Error<Any>(ex)
             return
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(actualEmail).matches()) {
-            _signUpStatus.value = Resource.Error<Any>(Error.InvalidEmail())
-            return
-        }
-
-        val actualPassword = password.value?.trim()
-        if (actualPassword.isNullOrEmpty()) {
-            _signUpStatus.value = Resource.Error<Any>(Error.MissingPassword())
+        val actualPassword = try {
+            SignInPasswordViewModel.validatePassword(password.value.orEmpty())
+        } catch (ex: Error) {
+            _signUpStatus.value = Resource.Error<Any>(ex)
             return
         }
 

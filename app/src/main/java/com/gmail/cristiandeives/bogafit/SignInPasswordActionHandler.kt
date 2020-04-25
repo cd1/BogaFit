@@ -4,7 +4,6 @@ import android.view.View
 import androidx.annotation.UiThread
 
 @UiThread
-interface SignInActionHandler {
+interface SignInPasswordActionHandler {
     fun onSignInButtonClick(view: View)
-    fun onSignUpButtonClick(view: View)
 }

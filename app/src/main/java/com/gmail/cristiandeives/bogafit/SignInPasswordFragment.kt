@@ -7,23 +7,25 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
-import androidx.navigation.fragment.findNavController
-import com.gmail.cristiandeives.bogafit.databinding.FragmentSignInBinding
+import androidx.navigation.fragment.navArgs
+import com.gmail.cristiandeives.bogafit.databinding.FragmentSignInPasswordBinding
 import com.google.android.material.snackbar.Snackbar
 
-@MainThread
-class SignInFragment : Fragment(),
-    SignInActionHandler {
+class SignInPasswordFragment : Fragment(),
+    SignInPasswordActionHandler {
 
-    private lateinit var binding: FragmentSignInBinding
-    private val navController by lazy { findNavController() }
-    private val viewModel by viewModels<SignInViewModel>()
+    private lateinit var binding: FragmentSignInPasswordBinding
+    private val args by navArgs<SignInPasswordFragmentArgs>()
+    private val viewModel by viewModels<SignInPasswordViewModel>(factoryProducer = {
+        ViewModelFactory(args.email)
+    })
 
     private val signInProgressDialog by lazy {
         ProgressDialog(requireContext()).apply {
@@ -34,7 +36,7 @@ class SignInFragment : Fragment(),
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Log.v(TAG, "> onCreateView(...)")
-        binding = FragmentSignInBinding.inflate(inflater, container, false)
+        binding = FragmentSignInPasswordBinding.inflate(inflater, container, false)
 
         val view = binding.root
         Log.v(TAG, "< onCreateView(...): $view")
@@ -49,7 +51,7 @@ class SignInFragment : Fragment(),
             lifecycleOwner = viewLifecycleOwner
 
             vm = viewModel
-            action = this@SignInFragment
+            action = this@SignInPasswordFragment
         }
 
         viewModel.signInStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
@@ -74,15 +76,7 @@ class SignInFragment : Fragment(),
 
     override fun onSignInButtonClick(view: View) {
         Log.i(TAG, "user tapped sign in button")
-
         viewModel.signIn()
-    }
-
-    override fun onSignUpButtonClick(view: View) {
-        Log.i(TAG, "user tapped sign up button")
-
-        val action = SignInFragmentDirections.toSignUp()
-        navController.navigate(action)
     }
 
     @UiThread
@@ -99,21 +93,10 @@ class SignInFragment : Fragment(),
     @UiThread
     private fun onSignInError(res: Resource.Error<*>) {
         res.exception?.consume()?.let { ex ->
-            val message = when (ex as SignInViewModel.Error) {
-                is SignInViewModel.Error.MissingEmail -> {
-                    binding.emailEdit.requestFocus()
-                    R.string.sign_in_error_missing_email
-                }
-                is SignInViewModel.Error.InvalidEmail -> {
-                    binding.emailEdit.requestFocus()
-                    R.string.sign_in_error_invalid_email
-                }
-                is SignInViewModel.Error.MissingPassword -> {
-                    binding.passwordEdit.requestFocus()
-                    R.string.sign_in_error_missing_password
-                }
-                is SignInViewModel.Error.InvalidCredentials -> R.string.sign_in_error_invalid_credentials
-                is SignInViewModel.Error.Server -> R.string.sign_in_error_server
+            val message = when (ex as SignInPasswordViewModel.SignInError) {
+                is SignInPasswordViewModel.SignInError.MissingPassword -> R.string.sign_in_error_missing_password
+                is SignInPasswordViewModel.SignInError.InvalidCredentials -> R.string.sign_in_error_invalid_credentials
+                is SignInPasswordViewModel.SignInError.Server -> R.string.sign_in_error_server
             }
 
             displayErrorMessage(message)
@@ -130,8 +113,12 @@ class SignInFragment : Fragment(),
         Snackbar.make(requireView(), messageRes, Snackbar.LENGTH_LONG).show()
     }
 
+    private class ViewModelFactory(private val email: String) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>) =
+            SignInPasswordViewModel(email) as T
+    }
 
     companion object {
-        private val TAG = SignInFragment::class.java.simpleName
+        private val TAG = SignInPasswordFragment::class.java.simpleName
     }
 }

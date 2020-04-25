@@ -8,6 +8,7 @@
     <string name="sign_in_title">Conectar</string>
     <string name="sign_in_email_label">E-mail</string>
     <string name="sign_in_password_label">Senha</string>
+    <string name="sign_in_next_button">Avançar</string>
     <string name="sign_in_sign_up_button">Ainda não tenho uma conta</string>
     <string name="sign_in_loading_message">Conectando…</string>
     <string name="sign_in_error_missing_email">Digite um endereço de e-mail</string>

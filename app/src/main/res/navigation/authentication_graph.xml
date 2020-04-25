@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/authentication_graph"
-    app:startDestination="@id/sign_in_fragment">
+    app:startDestination="@id/sign_in_main_fragment">
 
     <fragment
-        android:id="@+id/sign_in_fragment"
-        android:name="com.gmail.cristiandeives.bogafit.SignInFragment"
+        android:id="@+id/sign_in_main_fragment"
+        android:name="com.gmail.cristiandeives.bogafit.SignInMainFragment"
         android:label="@string/sign_in_title"
         tools:layout="@layout/fragment_sign_in">
 
         <action
             android:id="@+id/to_sign_up"
             app:destination="@id/sign_up_fragment" />
+        <action
+            android:id="@+id/to_sign_in_password"
+            app:destination="@id/sign_in_password_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/sign_in_password_fragment"
+        android:name="com.gmail.cristiandeives.bogafit.SignInPasswordFragment"
+        android:label="@string/sign_in_title"
+        tools:layout="@layout/fragment_sign_in_password">
+        <argument
+            android:name="email"
+            app:argType="string" />
     </fragment>
 
     <fragment

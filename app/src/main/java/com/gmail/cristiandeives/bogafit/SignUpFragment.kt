@@ -92,18 +92,9 @@ class SignUpFragment : Fragment(),
     private fun onSignUpError(res: Resource.Error<*>) {
         res.exception?.consume()?.let { ex ->
             val message = when (ex as SignUpViewModel.Error) {
-                is SignUpViewModel.Error.MissingEmail -> {
-                    binding.emailEdit.requestFocus()
-                    R.string.sign_in_error_missing_email
-                }
-                is SignUpViewModel.Error.InvalidEmail -> {
-                    binding.emailEdit.requestFocus()
-                    R.string.sign_in_error_invalid_email
-                }
-                is SignUpViewModel.Error.MissingPassword -> {
-                    binding.passwordEdit.requestFocus()
-                    R.string.sign_in_error_missing_password
-                }
+                is SignUpViewModel.Error.MissingEmail -> R.string.sign_in_error_missing_email
+                is SignUpViewModel.Error.InvalidEmail -> R.string.sign_in_error_invalid_email
+                is SignUpViewModel.Error.MissingPassword -> R.string.sign_in_error_missing_password
                 is SignUpViewModel.Error.Server -> R.string.sign_up_error_server
             }
 
