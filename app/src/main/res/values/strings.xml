@@ -17,6 +17,15 @@
     <string name="sign_in_error_invalid_credentials">The e-mail and password don\'t match. Please make sure you entered them correctly.</string>
     <string name="sign_in_error_server">There was an error signing in. Please try again later.</string>
 
+    <string name="reset_password_button">I forgot my password</string>
+    <string name="reset_password_confirmation_title">Reset password</string>
+    <string name="reset_password_message">An e-mail will be sent to %1$s with instructions on how to reset your password.
+        If an account with that e-mail doesn\'t exist, no e-mail will be sent.
+        \n\nDo you want to proceed?</string>
+    <string name="reset_password_positive_button">Yes, send e-mail</string>
+    <string name="reset_password_loading_message">Sending e-mail…</string>
+    <string name="reset_password_error_server">There was an error sending the e-mail. Please try again later.</string>
+
     <string name="sign_up_title">Sign up</string>
     <string name="sign_up_loading_message">Signing up…</string>
     <string name="sign_up_error_server">There was an error signing up. Please try again later.</string>

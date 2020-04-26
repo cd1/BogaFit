@@ -19,6 +19,29 @@ class SignInPasswordViewModel(val email: String) : ViewModel() {
 
     var password = MutableLiveData<String>()
 
+    private val _passwordResetStatus = MutableLiveData<Resource<*>>()
+    val passwordResetStatus: LiveData<Resource<*>> = _passwordResetStatus
+
+    @UiThread
+    fun sendPasswordResetEmail() {
+        _passwordResetStatus.value = Resource.Loading<Any>()
+
+        auth.sendPasswordResetEmail(email).addOnSuccessListener {
+            Log.d(TAG, "password reset success")
+            _passwordResetStatus.value = Resource.Success<Any>()
+        }.addOnFailureListener { ex ->
+            Log.w(TAG, "password reset failed: ${ex.message}", ex)
+            val specificError = when (ex) {
+                is FirebaseAuthInvalidUserException -> ResetPasswordError.InvalidEmail()
+                else -> ResetPasswordError.Server()
+            }
+            _passwordResetStatus.value = Resource.Error<Any>(specificError)
+        }.addOnCanceledListener {
+            Log.d(TAG, "password reset canceled")
+            _passwordResetStatus.value = Resource.Canceled<Any>()
+        }
+    }
+
     val canSignIn: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
         val passwordObserver = Observer<String> { newPassword ->
             value = try {
@@ -68,6 +91,11 @@ class SignInPasswordViewModel(val email: String) : ViewModel() {
         class MissingPassword : SignInError()
         class InvalidCredentials : SignInError()
         class Server : SignInError()
+    }
+
+    sealed class ResetPasswordError : RuntimeException() {
+        class InvalidEmail : ResetPasswordError()
+        class Server : ResetPasswordError()
     }
 
     companion object {

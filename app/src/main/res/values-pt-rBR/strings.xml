@@ -17,6 +17,15 @@
     <string name="sign_in_error_invalid_credentials">O e-mail e a senha não batem. Por favor, verifique se você digitou os dados corretamente.</string>
     <string name="sign_in_error_server">Houve um erro ao conectar. Por favor, tente novamente mais tarde.</string>
 
+    <string name="reset_password_button">Esqueci minha senha</string>
+    <string name="reset_password_confirmation_title">Refazer senha</string>
+    <string name="reset_password_message">Um e-mail será enviado para %1$s com instruções de como refazer a sua senha.
+        Se uma conta com esse e-mail não existir, nenhum e-mail será enviado.
+        \n\nDeseja continuar?</string>
+    <string name="reset_password_positive_button">Sim, enviar e-mail</string>
+    <string name="reset_password_loading_message">Enviando e-mail…</string>
+    <string name="reset_password_error_server">Houve um erro ao enviar o e-mail. Por favor, tente novamente mais tarde.</string>
+
     <string name="sign_up_title">Cadastrar</string>
     <string name="sign_up_loading_message">Cadastrando…</string>
     <string name="sign_up_error_server">Houve um erro ao cadastrar. Por favor, tente novamente mais tarde.</string>

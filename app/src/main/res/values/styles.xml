@@ -20,6 +20,10 @@
         <item name="android:backgroundTint">@drawable/main_button_background</item>
     </style>
 
+    <style name="AppTheme.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
     <style name="AppTheme.DangerousButton" parent="Widget.MaterialComponents.Button">
         <item name="android:backgroundTint">?attr/colorError</item>
         <item name="android:textColor">?attr/colorOnError</item>
