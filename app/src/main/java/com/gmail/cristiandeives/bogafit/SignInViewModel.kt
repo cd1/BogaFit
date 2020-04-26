@@ -81,5 +81,7 @@ class SignInViewModel : ViewModel() {
 
     companion object {
         private val TAG = SignInViewModel::class.java.simpleName
+
+        const val EMAIL_MAX_LENGTH = 320
     }
 }
