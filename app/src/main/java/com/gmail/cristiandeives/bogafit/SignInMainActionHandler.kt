@@ -5,6 +5,7 @@ import androidx.annotation.UiThread
 
 @UiThread
 interface SignInMainActionHandler {
-    fun onNextButtonClick(view: View)
+    fun onPhoneNextButtonClick(view: View)
+    fun onEmailNextButtonClick(view: View)
     fun onSignUpButtonClick(view: View)
 }

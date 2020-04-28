@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MainThread
-import androidx.annotation.StringRes
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
@@ -17,7 +16,6 @@ import com.gmail.cristiandeives.bogafit.databinding.FragmentSavePhysictivityBind
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener
-import com.google.android.material.snackbar.Snackbar
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -137,18 +135,13 @@ abstract class SavePhysictivityFragment : Fragment(),
                 is SavePhysictivityViewModel.Error.Server -> R.string.save_physictivity_error_server
             }
 
-            displayErrorMessage(message)
+            requireView().showMessage(message)
         }
     }
 
     @UiThread
     private fun onSavePhysictivityCanceled() {
         // nothing
-    }
-
-    @UiThread
-    internal fun displayErrorMessage(@StringRes messageRes: Int) {
-        Snackbar.make(requireView(), messageRes, Snackbar.LENGTH_LONG).show()
     }
 
     companion object {

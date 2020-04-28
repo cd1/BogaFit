@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MainThread
-import androidx.annotation.StringRes
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,7 +15,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gmail.cristiandeives.bogafit.data.Physictivity
 import com.gmail.cristiandeives.bogafit.databinding.FragmentListPhysictivityBinding
-import com.google.android.material.snackbar.Snackbar
 import java.text.NumberFormat
 
 @MainThread
@@ -115,18 +113,13 @@ class ListPhysictivityFragment : Fragment(),
                 is ListPhysictivityViewModel.Error.Server -> R.string.list_physictivities_error_server
             }
 
-            displayErrorMessage(message)
+            requireView().showMessage(message)
         }
     }
 
     @UiThread
     private fun onListPhysictivitiesCanceled() {
         // nothing
-    }
-
-    @UiThread
-    private fun displayErrorMessage(@StringRes messageRes: Int) {
-        Snackbar.make(requireView(), messageRes, Snackbar.LENGTH_LONG).show()
     }
 
     companion object {

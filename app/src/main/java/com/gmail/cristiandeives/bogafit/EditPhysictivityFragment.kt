@@ -96,7 +96,7 @@ class EditPhysictivityFragment : SavePhysictivityFragment() {
 
     @UiThread
     private fun onDeletePhysictivityError() {
-        displayErrorMessage(R.string.save_physictivity_delete_error_server)
+        requireView().showMessage(R.string.save_physictivity_delete_error_server)
     }
 
     @UiThread

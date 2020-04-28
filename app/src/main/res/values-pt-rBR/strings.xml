@@ -6,9 +6,12 @@
     <string name="profile_navigation_title">Perfil</string>
 
     <string name="sign_in_title">Conectar</string>
+    <string name="sign_in_phone_number_label">Número de telefone</string>
+    <string name="sign_in_phone_warning">Pode ser que você receba uma mensagem de texto com um código de verificação. Cobranças por receber mensagem podem ser feitas, dependendo do seu plano.</string>
+    <string name="sign_in_phone_next_button">Continuar com número de telefone</string>
     <string name="sign_in_email_label">E-mail</string>
     <string name="sign_in_password_label">Senha</string>
-    <string name="sign_in_next_button">Avançar</string>
+    <string name="sign_in_email_next_button">Continuar com e-mail</string>
     <string name="sign_in_sign_up_button">Ainda não tenho uma conta</string>
     <string name="sign_in_loading_message">Conectando…</string>
     <string name="sign_in_error_missing_email">Digite um endereço de e-mail</string>
@@ -16,6 +19,18 @@
     <string name="sign_in_error_missing_password">Digite uma senha</string>
     <string name="sign_in_error_invalid_credentials">O e-mail e a senha não batem. Por favor, verifique se você digitou os dados corretamente.</string>
     <string name="sign_in_error_server">Houve um erro ao conectar. Por favor, tente novamente mais tarde.</string>
+
+    <string name="sign_in_phone_verification_error">Não foi possível verificar o número do seu telefone. Por favor, escolha outra forma pra se conectar.</string>
+    <string name="sign_in_phone_verification_loading">Verificando número de telefone…</string>
+
+    <string name="sign_in_phone_check_code_title">Verificar número de telefone</string>
+    <string name="sign_in_phone_check_code_subtitle">Uma mensagem de texto contendo um código de verificação foi enviada pro número %1$s. Quando você receber a mensagem, digite o código na caixa abaixo.</string>
+    <string name="sign_in_phone_check_code_code_label">Código de verificação</string>
+    <string name="sign_in_phone_check_code_button">Validar código</string>
+    <string name="sign_in_phone_check_code_loading">Validando código de verificação…</string>
+    <string name="sign_in_phone_check_code_error">O código de verificação está incorreto</string>
+
+    <string name="sign_in_password_title">Verificar senha</string>
 
     <string name="reset_password_button">Esqueci minha senha</string>
     <string name="reset_password_confirmation_title">Refazer senha</string>

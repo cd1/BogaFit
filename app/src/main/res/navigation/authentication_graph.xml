@@ -15,12 +15,15 @@
         <action
             android:id="@+id/to_sign_in_password"
             app:destination="@id/sign_in_password_fragment" />
+        <action
+            android:id="@+id/to_sign_in_phone_code"
+            app:destination="@id/sign_in_phone_code_fragment" />
     </fragment>
 
     <fragment
         android:id="@+id/sign_in_password_fragment"
         android:name="com.gmail.cristiandeives.bogafit.SignInPasswordFragment"
-        android:label="@string/sign_in_title"
+        android:label="@string/sign_in_password_title"
         tools:layout="@layout/fragment_sign_in_password">
         <argument
             android:name="email"
@@ -32,4 +35,10 @@
         android:name="com.gmail.cristiandeives.bogafit.SignUpFragment"
         android:label="@string/sign_up_title"
         tools:layout="@layout/fragment_sign_up" />
+
+    <fragment
+        android:id="@+id/sign_in_phone_code_fragment"
+        android:name="com.gmail.cristiandeives.bogafit.SignInPhoneCodeFragment"
+        android:label="@string/sign_in_phone_check_code_title"
+        tools:layout="@layout/fragment_sign_in_phone_code" />
 </navigation>

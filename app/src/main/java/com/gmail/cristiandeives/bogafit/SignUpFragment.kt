@@ -8,13 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MainThread
-import androidx.annotation.StringRes
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import com.gmail.cristiandeives.bogafit.databinding.FragmentSignUpBinding
-import com.google.android.material.snackbar.Snackbar
 
 @MainThread
 class SignUpFragment : Fragment(),
@@ -98,18 +96,13 @@ class SignUpFragment : Fragment(),
                 is SignUpViewModel.Error.Server -> R.string.sign_up_error_server
             }
 
-            displayErrorMessage(message)
+            requireView().showMessage(message)
         }
     }
 
     @UiThread
     private fun onSignUpCanceled() {
         // nothing
-    }
-
-    @UiThread
-    private fun displayErrorMessage(@StringRes messageRes: Int) {
-        Snackbar.make(requireView(), messageRes, Snackbar.LENGTH_LONG).show()
     }
 
     companion object {

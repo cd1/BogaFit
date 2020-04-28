@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MainThread
-import androidx.annotation.StringRes
 import androidx.annotation.UiThread
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
@@ -23,7 +22,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.gmail.cristiandeives.bogafit.databinding.FragmentSignInPasswordBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 
 class SignInPasswordFragment : Fragment(),
     DialogInterface.OnClickListener,
@@ -127,11 +125,16 @@ class SignInPasswordFragment : Fragment(),
 
     override fun onSignInButtonClick(view: View) {
         Log.i(TAG, "user tapped sign in button")
+
+        requireView().hideKeyboard()
+
         viewModel.signIn()
     }
 
     override fun onForgotPasswordButtonClick(view: View) {
         Log.i(TAG, "user tapped reset password button")
+
+        requireView().hideKeyboard()
 
         val dialog = ResetPasswordDialogFragment.newInstance(viewModel.email)
         dialog.show(parentFragmentManager, dialog.toString())
@@ -158,7 +161,7 @@ class SignInPasswordFragment : Fragment(),
                     else -> null
                 }
 
-                message?.let { displayErrorMessage(it) }
+                message?.let { requireView().showMessage(it) }
             }
         }
     }
@@ -188,18 +191,13 @@ class SignInPasswordFragment : Fragment(),
                 is SignInPasswordViewModel.SignInError.Server -> R.string.sign_in_error_server
             }
 
-            displayErrorMessage(message)
+            requireView().showMessage(message)
         }
     }
 
     @UiThread
     private fun onSignInCanceled() {
         // nothing
-    }
-
-    @UiThread
-    private fun displayErrorMessage(@StringRes messageRes: Int) {
-        Snackbar.make(requireView(), messageRes, Snackbar.LENGTH_LONG).show()
     }
 
     @MainThread
