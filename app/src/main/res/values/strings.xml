@@ -65,7 +65,11 @@
 
     <string name="profile_title">My profile</string>
     <string name="profile_name_label">Name</string>
+    <string name="profile_edit_loading">Updating…</string>
+    <string name="profile_edit_name_error">There was an error updating the name. Try again later.</string>
     <string name="profile_sign_out_button">Sign out</string>
+
+    <string name="empty_string_value">Empty</string>
 
     <string name="WEIGHT_LIFTING">Weight lifting</string>
     <string name="RUNNING">Running</string>

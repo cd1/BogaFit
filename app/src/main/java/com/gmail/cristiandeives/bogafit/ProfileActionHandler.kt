@@ -5,5 +5,6 @@ import androidx.annotation.UiThread
 
 @UiThread
 interface ProfileActionHandler {
+    fun onDisplayNameTextClick(view: View)
     fun onSignOutButtonClick(view: View)
 }
