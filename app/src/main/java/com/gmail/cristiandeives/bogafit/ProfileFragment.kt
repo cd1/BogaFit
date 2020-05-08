@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import com.gmail.cristiandeives.bogafit.databinding.AlertDialogEditDisplayNameBinding
 import com.gmail.cristiandeives.bogafit.databinding.FragmentProfileBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,9 +29,10 @@ class ProfileFragment : Fragment(),
     ProfileActionHandler {
 
     private lateinit var binding: FragmentProfileBinding
+    private val navController by lazy { findNavController() }
     private val viewModel by viewModels<ProfileViewModel>()
 
-    private val editDisplayNameProgressDialog by lazy {
+    private val editInfoProgressDialog by lazy {
         ProgressDialog(requireContext()).apply {
             setMessage(getString(R.string.profile_edit_loading))
             setCancelable(false)
@@ -58,21 +60,25 @@ class ProfileFragment : Fragment(),
             action = this@ProfileFragment
         }
 
-        viewModel.updateDisplayNameStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
-            Log.v(TAG, "> updateDisplayNameStatus#onChanged(t=$res)")
+        lifecycle.addObserver(viewModel)
 
-            when (res) {
-                is Resource.Loading -> onDisplayNameUpdateLoading()
-                is Resource.Success -> onDisplayNameUpdateSuccess()
-                is Resource.Error -> onDisplayNameUpdateError()
-                is Resource.Canceled -> onDisplayNameUpdateCanceled()
+        viewModel.apply {
+            updateDisplayNameStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
+                Log.v(TAG, "> updateDisplayNameStatus#onChanged(t=$res)")
+
+                when (res) {
+                    is Resource.Loading -> onDisplayNameUpdateLoading()
+                    is Resource.Success -> onDisplayNameUpdateSuccess()
+                    is Resource.Error -> onDisplayNameUpdateError()
+                    is Resource.Canceled -> onDisplayNameUpdateCanceled()
+                }
+
+                if (res?.isFinished == true) {
+                    editInfoProgressDialog.dismiss()
+                }
+
+                Log.v(TAG, "< updateDisplayNameStatus#onChanged(t=$res)")
             }
-
-            if (res?.isFinished == true) {
-                editDisplayNameProgressDialog.dismiss()
-            }
-
-            Log.v(TAG, "< updateDisplayNameStatus#onChanged(t=$res)")
         }
 
         childFragmentManager.setFragmentResultListener(REQUEST_KEY_EDIT_DISPLAY_NAME, viewLifecycleOwner, this)
@@ -100,6 +106,13 @@ class ProfileFragment : Fragment(),
         dialog.show(childFragmentManager, dialog.toString())
     }
 
+    override fun onPhoneNumberTextClick(view: View) {
+        Log.i(TAG, "user tapped the phone text")
+
+        val action = ProfileFragmentDirections.toSignInPhoneNumber()
+        navController.navigate(action)
+    }
+
     override fun onSignOutButtonClick(view: View) {
         Log.i(TAG, "user tapped the sign out button")
 
@@ -115,7 +128,7 @@ class ProfileFragment : Fragment(),
 
     @UiThread
     private fun onDisplayNameUpdateLoading() {
-        editDisplayNameProgressDialog.show()
+        editInfoProgressDialog.show()
     }
 
     @UiThread

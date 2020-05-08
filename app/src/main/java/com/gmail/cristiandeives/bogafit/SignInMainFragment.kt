@@ -1,16 +1,13 @@
 package com.gmail.cristiandeives.bogafit
 
-import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MainThread
-import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.gmail.cristiandeives.bogafit.databinding.FragmentSignInBinding
 
@@ -21,13 +18,6 @@ class SignInMainFragment : Fragment(),
     private lateinit var binding: FragmentSignInBinding
     private val navController by lazy { findNavController() }
     private val viewModel by viewModels<SignInViewModel>()
-
-    private val phoneVerificationProgressDialog by lazy {
-        ProgressDialog(requireContext()).apply {
-            setMessage(getString(R.string.sign_in_phone_verification_loading))
-            setCancelable(false)
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Log.v(TAG, "> onCreateView(...)")
@@ -49,36 +39,7 @@ class SignInMainFragment : Fragment(),
             action = this@SignInMainFragment
         }
 
-        viewModel.phoneVerificationStatus.observe(viewLifecycleOwner) { event: Event<Resource<*>>? ->
-            Log.v(TAG, "> phoneVerificationStatus#onChanged(t=$event)")
-
-            val res = event?.peek()?.takeIf { !event.consumed }
-
-            when (res) {
-                is Resource.Loading -> onPhoneVerificationLoading()
-                is Resource.Success -> onPhoneVerificationSuccess()
-                is Resource.Error -> onPhoneVerificationError()
-            }
-
-            if (res?.isFinished == true) {
-                phoneVerificationProgressDialog.dismiss()
-            }
-
-            when (res) {
-                is Resource.Success, is Resource.Error -> event.consume()
-            }
-
-            Log.v(TAG, "< phoneVerificationStatus#onChanged(t=$event)")
-        }
-
         Log.v(TAG, "< onViewCreated(...)")
-    }
-
-    override fun onPhoneNextButtonClick(view: View) {
-        Log.i(TAG, "user tapped phone next button")
-
-        requireView().hideKeyboard()
-        viewModel.verifyPhoneNumber(requireActivity())
     }
 
     override fun onEmailNextButtonClick(view: View) {
@@ -95,20 +56,11 @@ class SignInMainFragment : Fragment(),
         navController.navigate(action)
     }
 
-    @UiThread
-    private fun onPhoneVerificationLoading() {
-        phoneVerificationProgressDialog.show()
-    }
+    override fun onSignInWithPhoneButtonClick(view: View) {
+        Log.i(TAG, "user tapped sign in with phone button")
 
-    @UiThread
-    private fun onPhoneVerificationSuccess() {
-        val action = SignInMainFragmentDirections.toSignInPhoneCode()
+        val action = SignInMainFragmentDirections.toSignInPhoneNumber()
         navController.navigate(action)
-    }
-
-    @UiThread
-    private fun onPhoneVerificationError() {
-        requireView().showMessage(R.string.sign_in_phone_verification_error)
     }
 
     companion object {

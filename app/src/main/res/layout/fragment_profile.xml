@@ -50,6 +50,40 @@
                 app:drawableEndCompat="@drawable/ic_next"
                 tools:text="John Smith" />
 
+            <TextView
+                android:id="@+id/phone_label"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                style="@style/AppTheme.LabelText"
+                android:text="@string/sign_in_phone_number_label"
+                app:layout_constraintTop_toBottomOf="@id/display_name_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/phone_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/small_margin"
+                android:paddingBottom="@dimen/small_margin"
+                android:paddingStart="@dimen/large_margin"
+                android:paddingEnd="@dimen/large_margin"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:text="@{vm.formattedPhoneNumber}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:onClick="@{action::onPhoneNumberTextClick}"
+                app:layout_constraintTop_toBottomOf="@+id/phone_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:drawableEndCompat="@drawable/ic_next"
+                tools:text="+55 (19) 98888-7777" />
+
             <Button
                 android:id="@+id/sign_out_button"
                 android:layout_width="wrap_content"
@@ -61,7 +95,7 @@
                 android:text="@string/profile_sign_out_button"
                 android:onClick="@{action::onSignOutButtonClick}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/display_name_text" />
+                app:layout_constraintTop_toBottomOf="@+id/phone_text" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

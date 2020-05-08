@@ -10,8 +10,12 @@ import android.view.ViewGroup
 import androidx.annotation.MainThread
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.gmail.cristiandeives.bogafit.databinding.FragmentSignInPhoneCodeBinding
 
 @MainThread
@@ -19,9 +23,13 @@ class SignInPhoneCodeFragment : Fragment(),
     SignInPhoneCodeActionHandler {
 
     private lateinit var binding: FragmentSignInPhoneCodeBinding
-    private val viewModel by activityViewModels<SignInViewModel>()
+    private val args by navArgs<SignInPhoneCodeFragmentArgs>()
+    private val navController by lazy { findNavController() }
+    private val viewModel by viewModels<SignInPhoneCodeViewModel>(factoryProducer = {
+        ViewModelFactory(args.phoneNumber)
+    })
 
-    private val codeVerificationProgressDialog by lazy {
+    private val verifyPhoneCodeProgressDialog by lazy {
         ProgressDialog(requireContext()).apply {
             setMessage(getString(R.string.sign_in_phone_check_code_loading))
             setCancelable(false)
@@ -49,21 +57,21 @@ class SignInPhoneCodeFragment : Fragment(),
             action = this@SignInPhoneCodeFragment
         }
 
-        viewModel.signInStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
-            Log.v(TAG, "> signInStatus#onChanged(t=$res)")
+        viewModel.verifyPhoneCodeStatus.observe(viewLifecycleOwner) { res: Resource<SignInPhoneNumberViewModel.SignInReason>? ->
+            Log.v(TAG, "> verifyPhoneCodeStatus#onChanged(t=$res)")
 
             when (res) {
                 is Resource.Loading -> onSignInLoading()
-                is Resource.Success -> onSignInSuccess()
+                is Resource.Success -> onSignInSuccess(res)
                 is Resource.Error -> onSignInError(res)
                 is Resource.Canceled -> onSignInCanceled()
             }
 
             if (res?.isFinished == true) {
-                codeVerificationProgressDialog.dismiss()
+                verifyPhoneCodeProgressDialog.dismiss()
             }
 
-            Log.v(TAG, "< signInStatus#onChanged(t=$res)")
+            Log.v(TAG, "< verifyPhoneCodeStatus#onChanged(t=$res)")
         }
 
         Log.v(TAG, "< onViewCreated(...)")
@@ -73,36 +81,48 @@ class SignInPhoneCodeFragment : Fragment(),
         Log.i(TAG, "user tapped verify phone button")
 
         requireView().hideKeyboard()
-        viewModel.checkPhoneVerificationCode()
+        viewModel.checkPhoneVerificationCode(args.phoneVerificationId)
     }
 
     @UiThread
     private fun onSignInLoading() {
-        codeVerificationProgressDialog.show()
+        verifyPhoneCodeProgressDialog.show()
     }
 
     @UiThread
-    private fun onSignInSuccess() {
-        val intent = Intent(requireContext(), MainActivity::class.java)
-        startActivity(intent)
+    private fun onSignInSuccess(res: Resource.Success<SignInPhoneNumberViewModel.SignInReason>) {
+        when (res.data) {
+            SignInPhoneNumberViewModel.SignInReason.SIGN_IN -> {
+                val intent = Intent(requireContext(), MainActivity::class.java)
+                startActivity(intent)
+            }
+            SignInPhoneNumberViewModel.SignInReason.UPDATE_PHONE_NUMBER -> {
+                navController.popBackStack(R.id.profile_fragment, false)
+            }
+        }
     }
 
     @UiThread
     private fun onSignInError(res: Resource.Error<*>) {
         res.exception?.consume()?.let { ex ->
-            val message = when (ex as SignInViewModel.Error) {
-                is SignInViewModel.Error.InvalidCredentials -> R.string.sign_in_phone_check_code_error
-                is SignInViewModel.Error.Server -> R.string.sign_in_error_server
-                else -> null
+            val message = when (ex as SignInPhoneNumberViewModel.SignInError) {
+                is SignInPhoneNumberViewModel.SignInError.InvalidCredentials -> R.string.sign_in_phone_check_code_error_invalid_credentials
+                is SignInPhoneNumberViewModel.SignInError.ExistingCredentials -> R.string.sign_in_phone_check_code_error_collision
+                is SignInPhoneNumberViewModel.SignInError.Server -> R.string.sign_in_phone_check_code_error_server
             }
 
-            message?.let { requireView().showMessage(it) }
+            requireView().showMessage(message)
         }
     }
 
     @UiThread
     private fun onSignInCanceled() {
         // nothing
+    }
+
+    private class ViewModelFactory(private val phoneNumber: String) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>) =
+            SignInPhoneCodeViewModel(phoneNumber) as T
     }
 
     companion object {

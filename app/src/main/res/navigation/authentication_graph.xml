@@ -16,8 +16,8 @@
             android:id="@+id/to_sign_in_password"
             app:destination="@id/sign_in_password_fragment" />
         <action
-            android:id="@+id/to_sign_in_phone_code"
-            app:destination="@id/sign_in_phone_code_fragment" />
+            android:id="@+id/to_sign_in_phone_number"
+            app:destination="@id/sign_in_phone_number_fragment" />
     </fragment>
 
     <fragment
@@ -37,8 +37,23 @@
         tools:layout="@layout/fragment_sign_up" />
 
     <fragment
+        android:id="@+id/sign_in_phone_number_fragment"
+        android:name="com.gmail.cristiandeives.bogafit.SignInPhoneNumberFragment"
+        android:label="@string/sign_in_phone_number_button"
+        tools:layout="@layout/fragment_sign_in_phone_number">
+
+        <action
+            android:id="@+id/to_sign_in_phone_code"
+            app:destination="@id/sign_in_phone_code_fragment" />
+    </fragment>
+
+    <fragment
         android:id="@+id/sign_in_phone_code_fragment"
         android:name="com.gmail.cristiandeives.bogafit.SignInPhoneCodeFragment"
         android:label="@string/sign_in_phone_check_code_title"
-        tools:layout="@layout/fragment_sign_in_phone_code" />
+        tools:layout="@layout/fragment_sign_in_phone_code">
+
+        <argument android:name="phoneNumber" />
+        <argument android:name="phoneVerificationId" />
+    </fragment>
 </navigation>

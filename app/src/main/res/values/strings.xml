@@ -8,11 +8,13 @@
     <string name="sign_in_title">Sign in</string>
     <string name="sign_in_phone_number_label">Phone number</string>
     <string name="sign_in_phone_warning">You might receive a text message with a verification code. Standard text message rates may apply.</string>
-    <string name="sign_in_phone_next_button">Continue with phone number</string>
     <string name="sign_in_email_label">E-mail</string>
     <string name="sign_in_password_label">Password</string>
     <string name="sign_in_email_next_button">Continue with e-mail</string>
     <string name="sign_in_sign_up_button">I don\'t have an account yet</string>
+    <string name="sign_in_other_methods">Other sign in methods</string>
+    <string name="sign_in_phone_number_button">Sign in with phone number</string>
+    <string name="sign_in_next_button">Next</string>
     <string name="sign_in_loading_message">Signing in…</string>
     <string name="sign_in_error_missing_email">Enter an e-mail address</string>
     <string name="sign_in_error_invalid_email">Enter a valid e-mail address</string>
@@ -20,7 +22,7 @@
     <string name="sign_in_error_invalid_credentials">The e-mail and password don\'t match. Please make sure you entered them correctly.</string>
     <string name="sign_in_error_server">There was an error signing in. Please try again later.</string>
 
-    <string name="sign_in_phone_verification_error">Cannot verify your phone number. Please choose another sign in method.</string>
+    <string name="sign_in_phone_verification_error">Cannot verify your phone number. Please make sure you entered it correctly.</string>
     <string name="sign_in_phone_verification_loading">Verifying phone number…</string>
 
     <string name="sign_in_phone_check_code_title">Verify phone number</string>
@@ -28,7 +30,9 @@
     <string name="sign_in_phone_check_code_code_label">Verification code</string>
     <string name="sign_in_phone_check_code_button">Validate code</string>
     <string name="sign_in_phone_check_code_loading">Validating verification code…</string>
-    <string name="sign_in_phone_check_code_error">The verification code is incorrect</string>
+    <string name="sign_in_phone_check_code_error_invalid_credentials">The verification code is incorrect</string>
+    <string name="sign_in_phone_check_code_error_collision">There is another account using that phone number. Please enter a different number.</string>
+    <string name="sign_in_phone_check_code_error_server">There was an error verifying your phone number. Try again later.</string>
 
     <string name="sign_in_password_title">Verify password</string>
     <string name="reset_password_button">I forgot my password</string>
@@ -67,6 +71,11 @@
     <string name="profile_name_label">Name</string>
     <string name="profile_edit_loading">Updating…</string>
     <string name="profile_edit_name_error">There was an error updating the name. Try again later.</string>
+    <string name="profile_update_phone_number_title">Change phone number</string>
+    <string name="profile_remove_phone_number_button">Remove current phone number</string>
+    <string name="profile_remove_phone_number_loading">Removing…</string>
+    <string name="profile_cannot_remove_phone_number_message">You cannot remove your number now because it\'s the only way to sign in to this account.</string>
+    <string name="profile_remove_phone_number_error">There was an error removing the phone number. Try again later.</string>
     <string name="profile_sign_out_button">Sign out</string>
 
     <string name="empty_string_value">Empty</string>

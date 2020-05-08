@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <import type="com.gmail.cristiandeives.bogafit.SignInViewModel" />
+        <import type="com.gmail.cristiandeives.bogafit.SignInPhoneCodeViewModel" />
 
-        <variable name="vm" type="com.gmail.cristiandeives.bogafit.SignInViewModel" />
+        <variable name="vm" type="com.gmail.cristiandeives.bogafit.SignInPhoneCodeViewModel" />
         <variable name="action" type="com.gmail.cristiandeives.bogafit.SignInPhoneCodeActionHandler" />
     </data>
 
@@ -22,7 +22,7 @@
                 android:layout_marginTop="@dimen/large_margin"
                 android:layout_marginStart="@dimen/large_margin"
                 android:layout_marginEnd="@dimen/large_margin"
-                android:text="@{@string/sign_in_phone_check_code_subtitle(vm.formattedPhoneNumber)}"
+                android:text="@{@string/sign_in_phone_check_code_subtitle(vm.phoneNumber)}"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:autofillHints="smsOTPCode"
-                    android:maxLength="@{SignInViewModel.PHONE_CODE_MAX_LENGTH}"
+                    android:maxLength="@{SignInPhoneCodeViewModel.PHONE_CODE_MAX_LENGTH}"
                     android:text="@={vm.phoneCode}"
                     tools:text="123456" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -62,7 +62,7 @@
                 android:layout_marginEnd="@dimen/large_margin"
                 android:theme="@style/AppTheme.MainButton"
                 android:text="@string/sign_in_phone_check_code_button"
-                android:enabled="@{vm.canCheckPhoneVerificationCode}"
+                android:enabled="@{vm.canValidatePhoneVerificationCode}"
                 android:onClick="@{action::onVerifyPhoneCodeButtonClick}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

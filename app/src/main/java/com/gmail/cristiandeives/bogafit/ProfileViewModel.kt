@@ -1,17 +1,23 @@
 package com.gmail.cristiandeives.bogafit
 
 import android.app.Application
+import android.telephony.PhoneNumberUtils
 import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.UiThread
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import java.util.Locale
 
 @MainThread
-class ProfileViewModel(app: Application) : AndroidViewModel(app) {
+class ProfileViewModel(app: Application) : AndroidViewModel(app),
+    DefaultLifecycleObserver {
+
     private val auth = FirebaseAuth.getInstance()
     private val user = auth.currentUser ?: throw IllegalStateException("there is no authenticated user")
 
@@ -23,22 +29,46 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
             field = value
         }
 
-    val updateDisplayNameStatus = MutableLiveData<Resource<*>>()
+    private val _updateDisplayNameStatus = MutableLiveData<Resource<*>>()
+    val updateDisplayNameStatus: LiveData<Resource<*>> = _updateDisplayNameStatus
 
-    init {
-        displayName = user.displayName.orEmpty()
+    private val _formattedPhoneNumber = MutableLiveData<String>()
+    val formattedPhoneNumber: LiveData<String> = _formattedPhoneNumber
+    var phoneNumber = ""
+        private set(value) {
+            _formattedPhoneNumber.value = formatPhoneNumber(value)
+            field = value
+        }
+
+    override fun onStart(owner: LifecycleOwner) {
+        Log.v(TAG, "> onStart(...)")
+
+        overrideUiDataFromFirebase()
+
+        Log.d(TAG, "reloading user data...")
+        user.reload().addOnSuccessListener {
+            Log.d(TAG, "reload user data success")
+
+            overrideUiDataFromFirebase()
+        }.addOnFailureListener { ex ->
+            Log.w(TAG, "reload user data failed [${ex.message}]", ex)
+        }.addOnCanceledListener {
+            Log.d(TAG, "reload user data canceled")
+        }
+
+        Log.v(TAG, "< onStart(...)")
     }
 
     @UiThread
     fun updateDisplayName(newName: String) {
-        val actualNewName = validateDisplayName(newName)
+        val actualNewName = displayNameValue(newName)
 
         if (user.displayName == actualNewName) {
             Log.d(TAG, "user display name didn't change; skip update")
             return
         }
 
-        updateDisplayNameStatus.value = Resource.Loading<Any>()
+        _updateDisplayNameStatus.value = Resource.Loading<Any>()
 
         val profile = UserProfileChangeRequest.Builder()
             .setDisplayName(actualNewName)
@@ -49,28 +79,38 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app) {
             Log.d(TAG, "update user display name success")
 
             displayName = actualNewName
-            updateDisplayNameStatus.value = Resource.Success<Any>()
+            _updateDisplayNameStatus.value = Resource.Success<Any>()
         }.addOnFailureListener { ex ->
             Log.w(TAG, "update user display name failed [${ex.message}]", ex)
-            updateDisplayNameStatus.value = Resource.Error<Any>()
+            _updateDisplayNameStatus.value = Resource.Error<Any>()
         }.addOnCanceledListener {
             Log.d(TAG, "update user display name canceled")
-            updateDisplayNameStatus.value = Resource.Canceled<Any>()
+            _updateDisplayNameStatus.value = Resource.Canceled<Any>()
         }
     }
 
     @UiThread
-    private fun validateDisplayName(newName: String): String {
-        val validatedName = newName.trim().take(DISPLAY_NAME_MAX_LENGTH)
-        if (validatedName != newName) {
-            Log.d(TAG, "after validation, display name is now \"$validatedName\"")
-        }
-        return validatedName
-    }
+    private fun displayNameValue(newName: String) =
+        newName.trim().take(DISPLAY_NAME_MAX_LENGTH)
 
     @UiThread
     private fun formatDisplayName(newName: String) =
-        validateDisplayName(newName).takeIf { it.isNotEmpty() } ?: getApplication<Application>().getString(R.string.empty_string_value)
+        displayNameValue(newName).takeIf { it.isNotEmpty() } ?: getApplication<Application>().getString(R.string.empty_string_value)
+
+    @UiThread
+    private fun phoneNumberValue(newNumber: String) =
+        newNumber.trim().take(SignInPhoneNumberViewModel.PHONE_NUMBER_MAX_LENGTH)
+
+    @UiThread
+    private fun formatPhoneNumber(number: String) = phoneNumberValue(number).takeIf { it.isNotEmpty() }?.let { n ->
+        PhoneNumberUtils.formatNumber(n, Locale.getDefault().country)
+    } ?: getApplication<Application>().getString(R.string.empty_string_value)
+
+    @UiThread
+    private fun overrideUiDataFromFirebase() {
+        displayName = user.displayName.orEmpty()
+        phoneNumber = user.phoneNumber.orEmpty()
+    }
 
     @UiThread
     fun signOut() {

@@ -8,11 +8,13 @@
     <string name="sign_in_title">Conectar</string>
     <string name="sign_in_phone_number_label">Número de telefone</string>
     <string name="sign_in_phone_warning">Pode ser que você receba uma mensagem de texto com um código de verificação. Cobranças por receber mensagem podem ser feitas, dependendo do seu plano.</string>
-    <string name="sign_in_phone_next_button">Continuar com número de telefone</string>
     <string name="sign_in_email_label">E-mail</string>
     <string name="sign_in_password_label">Senha</string>
     <string name="sign_in_email_next_button">Continuar com e-mail</string>
     <string name="sign_in_sign_up_button">Ainda não tenho uma conta</string>
+    <string name="sign_in_other_methods">Outros métodos de se conectar</string>
+    <string name="sign_in_phone_number_button">Conectar com número de telefone</string>
+    <string name="sign_in_next_button">Próximo</string>
     <string name="sign_in_loading_message">Conectando…</string>
     <string name="sign_in_error_missing_email">Digite um endereço de e-mail</string>
     <string name="sign_in_error_invalid_email">Digite um endereço de e-mail válido</string>
@@ -20,7 +22,7 @@
     <string name="sign_in_error_invalid_credentials">O e-mail e a senha não batem. Por favor, verifique se você digitou os dados corretamente.</string>
     <string name="sign_in_error_server">Houve um erro ao conectar. Por favor, tente novamente mais tarde.</string>
 
-    <string name="sign_in_phone_verification_error">Não foi possível verificar o número do seu telefone. Por favor, escolha outra forma pra se conectar.</string>
+    <string name="sign_in_phone_verification_error">Não é possível verificar o número do seu telefone. Por favor, verifique se você digitou o número corretamente.</string>
     <string name="sign_in_phone_verification_loading">Verificando número de telefone…</string>
 
     <string name="sign_in_phone_check_code_title">Verificar número de telefone</string>
@@ -28,7 +30,9 @@
     <string name="sign_in_phone_check_code_code_label">Código de verificação</string>
     <string name="sign_in_phone_check_code_button">Validar código</string>
     <string name="sign_in_phone_check_code_loading">Validando código de verificação…</string>
-    <string name="sign_in_phone_check_code_error">O código de verificação está incorreto</string>
+    <string name="sign_in_phone_check_code_error_invalid_credentials">O código de verificação está incorreto</string>
+    <string name="sign_in_phone_check_code_error_collision">Existe outra conta usando esse número de telefone. Por favor digite um número diferente.</string>
+    <string name="sign_in_phone_check_code_error_server">Houve um erro ao verificar o número do seu telefone. Tente novamente mais tarde.</string>
 
     <string name="sign_in_password_title">Verificar senha</string>
 
@@ -68,6 +72,11 @@
     <string name="profile_name_label">Nome</string>
     <string name="profile_edit_loading">Alterando…</string>
     <string name="profile_edit_name_error">Houve um erro ao alterar o nome. Tente novamente mais tarde.</string>
+    <string name="profile_update_phone_number_title">Alterar número de telefone</string>
+    <string name="profile_remove_phone_number_button">Remover número de telefone atual</string>
+    <string name="profile_remove_phone_number_loading">Removendo…</string>
+    <string name="profile_cannot_remove_phone_number_message">Você não pode remover seu número agora porque ele é a única forma de se conectar a essa conta.</string>
+    <string name="profile_remove_phone_number_error">Houve um erro ao remover o número de telefone. Tente novamente mais tarde.</string>
     <string name="profile_sign_out_button">Desconectar</string>
 
     <string name="empty_string_value">Vazio</string>

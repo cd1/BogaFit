@@ -38,5 +38,31 @@
         android:id="@+id/profile_fragment"
         android:name="com.gmail.cristiandeives.bogafit.ProfileFragment"
         android:label="@string/profile_title"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/to_sign_in_phone_number"
+            app:destination="@id/sign_in_phone_number_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/sign_in_phone_number_fragment"
+        android:name="com.gmail.cristiandeives.bogafit.SignInPhoneNumberFragment"
+        android:label="@string/profile_update_phone_number_title"
+        tools:layout="@layout/fragment_sign_in_phone_number">
+
+        <action
+            android:id="@+id/to_sign_in_phone_code"
+            app:destination="@id/sign_in_phone_code_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/sign_in_phone_code_fragment"
+        android:name="com.gmail.cristiandeives.bogafit.SignInPhoneCodeFragment"
+        android:label="@string/sign_in_phone_number_button"
+        tools:layout="@layout/fragment_sign_in_phone_code" >
+
+        <argument android:name="phoneNumber" />
+        <argument android:name="phoneVerificationId" />
+    </fragment>
 </navigation>
