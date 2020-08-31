@@ -23,7 +23,17 @@ class MainActivity : AppCompatActivity() {
         Log.v(TAG, "> onCreate(...)")
         super.onCreate(savedInstanceState)
 
-        requireAuthenticatedUser()
+        if (!viewModel.isUserAuthenticated()) {
+            Log.d(TAG, "user is not authenticated; launching authentication screen")
+
+            val intent = Intent(this, AuthenticationActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+            }
+            startActivity(intent)
+
+            finish()
+            return
+        }
 
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
 
@@ -42,20 +52,6 @@ class MainActivity : AppCompatActivity() {
 
         Log.v(TAG, "< onSupportNavigateUp(): $navigatedUp")
         return navigatedUp
-    }
-
-    @UiThread
-    private fun requireAuthenticatedUser() {
-        if (!viewModel.isUserAuthenticated()) {
-            Log.d(TAG, "user is not authenticated; launching authentication screen")
-
-            val intent = Intent(this, AuthenticationActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-            }
-            startActivity(intent)
-
-            finish()
-        }
     }
 
     companion object {
