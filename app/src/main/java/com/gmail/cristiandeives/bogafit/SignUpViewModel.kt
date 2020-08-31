@@ -21,7 +21,7 @@ class SignUpViewModel : ViewModel() {
                 SignInViewModel.validateEmail(email.value.orEmpty())
                 SignInPasswordViewModel.validatePassword(password.value.orEmpty())
                 true
-            } catch (ex: Error) {
+            } catch (ex: Exception) {
                 false
             }
         }
@@ -40,7 +40,7 @@ class SignUpViewModel : ViewModel() {
 
         val actualEmail = try {
             SignInViewModel.validateEmail(email.value.orEmpty())
-        } catch (ex: Error) {
+        } catch (ex: Exception) {
             _signUpStatus.value = Resource.Error<Any>(ex)
             return
         }
