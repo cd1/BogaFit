@@ -68,6 +68,12 @@
     <string name="edit_physictivity_title">Alterar atividade física</string>
     <string name="edit_physictivity_save_button">Alterar</string>
 
+    <string name="measurements_navigation_title">Medidas</string>
+    <string name="measurements_title">Medidas do meu corpo</string>
+    <string name="weight_label">Peso</string>
+    <string name="height_label">Altura</string>
+    <string name="bmi_title">Índice de massa corporal</string>
+
     <string name="profile_title">Meu perfil</string>
     <string name="profile_name_label">Nome</string>
     <string name="profile_edit_loading">Alterando…</string>

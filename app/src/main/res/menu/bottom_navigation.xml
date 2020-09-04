@@ -4,6 +4,10 @@
         android:icon="@drawable/ic_fitness_center"
         android:title="@string/physictivities_navigation_title" />
 
+    <item android:id="@id/measurements_fragment"
+        android:icon="@drawable/ic_timeline"
+        android:title="@string/measurements_navigation_title" />
+
     <item android:id="@id/profile_fragment"
         android:icon="@drawable/ic_account"
         android:title="@string/profile_navigation_title" />

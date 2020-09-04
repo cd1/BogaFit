@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.annotation.MainThread
-import androidx.annotation.UiThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
@@ -60,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         // set of fragments which shouldn't have the up arrow in the Action Bar
         private val TOP_LEVEL_FRAGMENTS = setOf(
             R.id.list_physictivity_fragment,
+            R.id.measurements_fragment,
             R.id.profile_fragment
         )
     }

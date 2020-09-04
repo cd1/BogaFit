@@ -67,6 +67,12 @@
     <string name="edit_physictivity_title">Edit physical activity</string>
     <string name="edit_physictivity_save_button">Edit</string>
 
+    <string name="measurements_navigation_title">Measurements</string>
+    <string name="measurements_title">My body measurements</string>
+    <string name="weight_label">Weight</string>
+    <string name="height_label">Height</string>
+    <string name="bmi_title">Body mass index</string>
+
     <string name="profile_title">My profile</string>
     <string name="profile_name_label">Name</string>
     <string name="profile_edit_loading">Updating…</string>

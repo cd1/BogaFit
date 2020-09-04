@@ -65,4 +65,53 @@
         <argument android:name="phoneNumber" />
         <argument android:name="phoneVerificationId" />
     </fragment>
+
+    <fragment
+        android:id="@+id/measurements_fragment"
+        android:name="com.gmail.cristiandeives.bogafit.MeasurementsFragment"
+        android:label="@string/measurements_title"
+        tools:layout="@layout/fragment_measurements">
+
+        <action
+            android:id="@+id/to_edit_weight"
+            app:destination="@id/edit_measurement_dialog" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/edit_measurement_dialog"
+        android:name="com.gmail.cristiandeives.bogafit.EditMeasurementDialogFragment"
+        android:label="EditMeasurementDialogFragment"
+        tools:layout="@layout/alert_dialog_edit_measurement">
+
+        <argument
+            android:name="request_key"
+            app:argType="string" />
+        <argument
+            android:name="title_res"
+            app:argType="integer" />
+        <argument
+            android:name="value0"
+            app:argType="integer" />
+        <argument
+            android:name="value1"
+            app:argType="integer" />
+        <argument
+            android:name="value0Min"
+            app:argType="integer" />
+        <argument
+            android:name="value0Max"
+            app:argType="integer" />
+        <argument
+            android:name="value1Min"
+            app:argType="integer" />
+        <argument
+            android:name="value1Max"
+            app:argType="integer" />
+        <argument
+            android:name="text0"
+            app:argType="string" />
+        <argument
+            android:name="text1"
+            app:argType="string" />
+    </dialog>
 </navigation>

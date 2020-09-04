@@ -52,12 +52,54 @@ class FirestoreRepository {
         return db.collection(PHYSICTIVITY_COLLECTION).document(id).delete()
     }
 
+    fun setWeight(weight: Double): Task<*> {
+        val uid = auth.currentUser?.uid ?: throw IllegalStateException("there is no authenticated user")
+
+        val data = mapOf(
+            WEIGHT_FIELD_VALUE to weight,
+        )
+
+        Log.d(TAG, "setting document [id=$uid, $data] to collection $WEIGHT_COLLECTION...")
+        return db.collection(WEIGHT_COLLECTION).document(uid).set(data)
+    }
+
+    fun getWeight(): DocumentReference {
+        val uid = auth.currentUser?.uid ?: throw IllegalStateException("there is no authenticated user")
+
+        Log.d(TAG, "reading document [id=$uid] from collection $WEIGHT_COLLECTION")
+        return db.collection(WEIGHT_COLLECTION).document(uid)
+    }
+
+    fun setHeight(height: Double): Task<*> {
+        val uid = auth.currentUser?.uid ?: throw IllegalStateException("there is no authenticated user")
+
+        val data = mapOf(
+            HEIGHT_FIELD_VALUE to height,
+        )
+
+        Log.d(TAG, "setting document [id=$uid, $data] to collection $HEIGHT_COLLECTION...")
+        return db.collection(HEIGHT_COLLECTION).document(uid).set(data)
+    }
+
+    fun getHeight(): DocumentReference {
+        val uid = auth.currentUser?.uid ?: throw IllegalStateException("there is no authenticated user")
+
+        Log.d(TAG, "reading document [id=$uid] from collection $HEIGHT_COLLECTION")
+        return db.collection(HEIGHT_COLLECTION).document(uid)
+    }
+
     companion object {
         private const val PHYSICTIVITY_COLLECTION = "physictivity"
         const val PHYSICTIVITY_UID = "uid"
         const val PHYSICTIVITY_FIELD_DATE = "date"
         const val PHYSICTIVITY_FIELD_TYPE = "type"
         const val PHYSICTIVITY_FIELD_UPDATED_AT = "updatedAt"
+
+        private const val WEIGHT_COLLECTION = "weight"
+        const val WEIGHT_FIELD_VALUE = "weight"
+
+        private const val HEIGHT_COLLECTION = "height"
+        const val HEIGHT_FIELD_VALUE = "height"
 
         private val TAG = FirestoreRepository::class.java.simpleName
 

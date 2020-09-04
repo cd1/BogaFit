@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable name="vm" type="com.gmail.cristiandeives.bogafit.MeasurementsViewModel" />
+        <variable name="action" type="com.gmail.cristiandeives.bogafit.MeasurementsActionHandler" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/bmi_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                android:layout_marginTop="@dimen/large_margin"
+                android:text="@string/bmi_title"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/bmi_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginBottom="@dimen/large_margin"
+                android:text="@{vm.bmi}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bmi_label"
+                tools:text="20" />
+
+            <TextView
+                android:id="@+id/weight_label"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                style="@style/AppTheme.LabelText"
+                android:text="@string/weight_label"
+                app:layout_constraintTop_toBottomOf="@id/bmi_value"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/weight_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/small_margin"
+                android:paddingBottom="@dimen/small_margin"
+                android:paddingStart="@dimen/large_margin"
+                android:paddingEnd="@dimen/large_margin"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:text="@{vm.formattedWeight}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:onClick="@{action::onWeightTextClick}"
+                app:layout_constraintTop_toBottomOf="@+id/weight_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/height_text"
+                app:drawableEndCompat="@drawable/ic_next"
+                tools:text="80.0 kg" />
+
+            <TextView
+                android:id="@+id/height_label"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                style="@style/AppTheme.LabelText"
+                android:text="@string/height_label"
+                app:layout_constraintStart_toEndOf="@+id/weight_text"
+                app:layout_constraintTop_toBottomOf="@id/bmi_value" />
+
+            <TextView
+                android:id="@+id/height_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:onClick="@{action::onHeightTextClick}"
+                android:paddingStart="@dimen/large_margin"
+                android:paddingTop="@dimen/small_margin"
+                android:paddingEnd="@dimen/large_margin"
+                android:paddingBottom="@dimen/small_margin"
+                android:text="@{vm.formattedHeight}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                app:drawableEndCompat="@drawable/ic_next"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/weight_text"
+                app:layout_constraintTop_toBottomOf="@+id/height_label"
+                tools:text="1.75 cm" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>
