@@ -5,6 +5,7 @@ import androidx.annotation.MainThread
 import androidx.annotation.UiThread
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gmail.cristiandeives.bogafit.data.FirestoreRepository
@@ -20,7 +21,7 @@ class ListPhysictivityViewModel : ViewModel(),
     private val repo = FirestoreRepository.getInstance()
 
     private val _listPhysictivitiesStatus = MutableLiveData<Resource<List<Physictivity>>>()
-    val listPhysictivityStatus = _listPhysictivitiesStatus
+    val listPhysictivityStatus: LiveData<Resource<List<Physictivity>>> = _listPhysictivitiesStatus
 
     private var physictivitiesQueryListener: ListenerRegistration? = null
 
