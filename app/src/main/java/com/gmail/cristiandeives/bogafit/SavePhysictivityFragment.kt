@@ -80,6 +80,10 @@ abstract class SavePhysictivityFragment : Fragment(),
             }
         }
 
+        // reset the listener after a configuration change
+        (parentFragmentManager.findFragmentByTag(SELECT_DATE_DIALOG_TAG) as? MaterialDatePicker<Long>)
+            ?.addOnPositiveButtonClickListener(this)
+
         Log.v(TAG, "< onViewCreated(...)")
     }
 
@@ -109,7 +113,7 @@ abstract class SavePhysictivityFragment : Fragment(),
             .setCalendarConstraints(constraints)
             .build()
         picker.addOnPositiveButtonClickListener(this)
-        picker.show(parentFragmentManager, picker.toString())
+        picker.show(parentFragmentManager, SELECT_DATE_DIALOG_TAG)
     }
 
     override fun onSaveButtonClick(view: View) {
@@ -146,5 +150,7 @@ abstract class SavePhysictivityFragment : Fragment(),
 
     companion object {
         private val TAG = SavePhysictivityFragment::class.java.simpleName
+
+        private const val SELECT_DATE_DIALOG_TAG = "selectDate"
     }
 }
