@@ -1,12 +1,14 @@
 package com.gmail.cristiandeives.bogafit.data
 
 import android.util.Log
+import com.gmail.cristiandeives.bogafit.Gender
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 import java.time.LocalDate
 
 class FirestoreRepository {
@@ -88,6 +90,30 @@ class FirestoreRepository {
         return db.collection(HEIGHT_COLLECTION).document(uid)
     }
 
+    fun setBirthDate(date: LocalDate) = setUserData(mapOf(
+        USER_FIELD_BIRTH_DATE to date.toFirestoreTimestamp(),
+    ))
+
+    fun setGender(gender: Gender) = setUserData(mapOf(
+        USER_FIELD_GENDER to gender.name,
+    ))
+
+    private fun setUserData(data: Map<String, Any>): Task<*> {
+        val uid = auth.currentUser?.uid ?: throw IllegalStateException("there is no authenticated user")
+
+        val collection = USER_COLLECTION
+        Log.d(TAG, "updating document [id=$uid, $data] in collection $collection...")
+        return db.collection(collection).document(uid).set(data, SetOptions.merge())
+    }
+
+    fun getUser(): DocumentReference {
+        val uid = auth.currentUser?.uid ?: throw IllegalStateException("there is no authenticated user")
+
+        val collection = USER_COLLECTION
+        Log.d(TAG, "reading document [id=$uid] from collection $collection")
+        return db.collection(collection).document(uid)
+    }
+
     companion object {
         private const val PHYSICTIVITY_COLLECTION = "physictivity"
         const val PHYSICTIVITY_UID = "uid"
@@ -100,6 +126,10 @@ class FirestoreRepository {
 
         private const val HEIGHT_COLLECTION = "height"
         const val HEIGHT_FIELD_VALUE = "height"
+
+        private const val USER_COLLECTION = "user"
+        const val USER_FIELD_BIRTH_DATE = "birthDate"
+        const val USER_FIELD_GENDER = "gender"
 
         private val TAG = FirestoreRepository::class.java.simpleName
 

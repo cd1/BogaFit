@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">Boga Fit</string>
 
+    <string name="loading_message">Loading…</string>
+
     <string name="physictivities_navigation_title">Activities</string>
     <string name="profile_navigation_title">Profile</string>
 
@@ -70,13 +72,27 @@
     <string name="measurements_navigation_title">Measurements</string>
     <string name="measurements_title">My body measurements</string>
     <string name="weight_label">Weight</string>
+    <string name="edit_weight_error">There was an error updating the weight. Try again later.</string>
     <string name="height_label">Height</string>
+    <string name="edit_height_error">There was an error updating the height. Try again later.</string>
     <string name="bmi_title">Body mass index</string>
+    <string name="bmi_underweight_description">Underweight</string>
+    <string name="bmi_normal_weight_description">Normal weight</string>
+    <string name="bmi_overweight_description">Overweight</string>
+    <string name="bmi_obese_description">Obese</string>
+    <string name="bfp_title">Body fat percentage</string>
 
     <string name="profile_title">My profile</string>
+    <string name="profile_load_user_data_error">There was an error loading your personal data. Try again later.</string>
     <string name="profile_name_label">Name</string>
     <string name="profile_edit_loading">Updating…</string>
     <string name="profile_edit_name_error">There was an error updating the name. Try again later.</string>
+    <string name="profile_birth_date_label">Birth date</string>
+    <string name="profile_edit_birth_date_error">There was an error updating the birth date. Try again later.</string>
+    <string name="profile_gender_label">Gender</string>
+    <string name="profile_gender_male">Male</string>
+    <string name="profile_gender_female">Female</string>
+    <string name="profile_edit_gender_error">There was an error updating the gender. Try again later.</string>
     <string name="profile_update_phone_number_title">Change phone number</string>
     <string name="profile_remove_phone_number_button">Remove current phone number</string>
     <string name="profile_remove_phone_number_loading">Removing…</string>
@@ -85,6 +101,7 @@
     <string name="profile_sign_out_button">Sign out</string>
 
     <string name="empty_string_value">Empty</string>
+    <string name="no_value">-</string>
 
     <string name="WEIGHT_LIFTING">Weight lifting</string>
     <string name="RUNNING">Running</string>

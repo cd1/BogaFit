@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- the array items should match the order of the enum declaration -->
+    <string-array name="genders">
+        <item>@string/profile_gender_male</item>
+        <item>@string/profile_gender_female</item>
+    </string-array>
+</resources>

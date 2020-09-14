@@ -21,16 +21,30 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.gmail.cristiandeives.bogafit.databinding.AlertDialogEditDisplayNameBinding
 import com.gmail.cristiandeives.bogafit.databinding.FragmentProfileBinding
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneOffset
 
 @MainThread
 class ProfileFragment : Fragment(),
     FragmentResultListener,
+    MaterialPickerOnPositiveButtonClickListener<Long>,
     ProfileActionHandler {
 
     private lateinit var binding: FragmentProfileBinding
     private val navController by lazy { findNavController() }
     private val viewModel by viewModels<ProfileViewModel>()
+
+    private val loadUserDataProgressDialog by lazy {
+        ProgressDialog(requireContext()).apply {
+            setMessage(getString(R.string.loading_message))
+            setCancelable(false)
+        }
+    }
 
     private val editInfoProgressDialog by lazy {
         ProgressDialog(requireContext()).apply {
@@ -63,6 +77,23 @@ class ProfileFragment : Fragment(),
         lifecycle.addObserver(viewModel)
 
         viewModel.apply {
+            loadUserDataStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
+                Log.v(TAG, "> loadUserDataStatus#onChanged(t=$res)")
+
+                when (res) {
+                    is Resource.Loading -> onLoadUserDataLoading()
+                    is Resource.Success -> onLoadUserDataSuccess()
+                    is Resource.Error -> onLoadUserDataError()
+                    is Resource.Canceled -> onLoadUserDataCanceled()
+                }
+
+                if (res?.isFinished == true) {
+                    loadUserDataProgressDialog.dismiss()
+                }
+
+                Log.v(TAG, "< loadUserDataStatus#onChanged(t=$res)")
+            }
+
             updateDisplayNameStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
                 Log.v(TAG, "> updateDisplayNameStatus#onChanged(t=$res)")
 
@@ -79,9 +110,48 @@ class ProfileFragment : Fragment(),
 
                 Log.v(TAG, "< updateDisplayNameStatus#onChanged(t=$res)")
             }
+
+            updateBirthDateStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
+                Log.v(TAG, "> updateBirthDateStatus#onChanged(t=$res)")
+
+                when (res) {
+                    is Resource.Loading -> onBirthDateUpdateLoading()
+                    is Resource.Success -> onBirthDateUpdateSuccess()
+                    is Resource.Error -> onBirthDateUpdateError()
+                    is Resource.Canceled -> onBirthDateUpdateCanceled()
+                }
+
+                if (res?.isFinished == true) {
+                    editInfoProgressDialog.dismiss()
+                }
+
+                Log.v(TAG, "< updateBirthDateStatus#onChanged(t=$res)")
+            }
+
+            updateGenderStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
+                Log.v(TAG, "> updateGenderStatus#onChanged(t=$res)")
+
+                when (res) {
+                    is Resource.Loading -> onGenderUpdateLoading()
+                    is Resource.Success -> onGenderUpdateSuccess()
+                    is Resource.Error -> onGenderUpdateError()
+                    is Resource.Canceled -> onGenderUpdateCanceled()
+                }
+
+                if (res?.isFinished == true) {
+                    editInfoProgressDialog.dismiss()
+                }
+
+                Log.v(TAG, "< updateGenderStatus#onChanged(t=$res)")
+            }
         }
 
         childFragmentManager.setFragmentResultListener(REQUEST_KEY_EDIT_DISPLAY_NAME, viewLifecycleOwner, this)
+        parentFragmentManager.setFragmentResultListener(REQUEST_KEY_SELECT_GENDER, viewLifecycleOwner, this)
+
+        // reset the listener after a configuration change
+        (parentFragmentManager.findFragmentByTag(SELECT_BIRTH_DATE_DIALOG_TAG) as? MaterialDatePicker<Long>)
+            ?.addOnPositiveButtonClickListener(this)
 
         Log.v(TAG, "< onViewCreated(...)")
     }
@@ -94,9 +164,23 @@ class ProfileFragment : Fragment(),
                 val name = result.getString(BUNDLE_KEY_DISPLAY_NAME, "")
                 viewModel.updateDisplayName(name)
             }
+            REQUEST_KEY_SELECT_GENDER -> {
+                val gender = result.getSerializable(BUNDLE_KEY_GENDER) as Gender
+                viewModel.updateGender(gender)
+            }
         }
 
         Log.v(TAG, "< onFragmentResult(requestKey=$requestKey, result=$result)")
+    }
+
+    override fun onPositiveButtonClick(selection: Long) {
+        Log.v(TAG, "> onPositiveButtonClick(selection=$selection)")
+
+        val selectionDate = Instant.ofEpochMilli(selection).atZone(ZoneOffset.UTC).toLocalDate()
+        Log.i(TAG, "user selected birth date=$selectionDate")
+        viewModel.updateBirthDate(selectionDate)
+
+        Log.v(TAG, "< onPositiveButtonClick(selection=$selection)")
     }
 
     override fun onDisplayNameTextClick(view: View) {
@@ -113,6 +197,34 @@ class ProfileFragment : Fragment(),
         navController.navigate(action)
     }
 
+    override fun onBirthDateTextClick(view: View) {
+        Log.i(TAG, "user tapped the birth date text")
+
+        val date = viewModel.birthDate ?: LocalDate.now()
+        val dateUtcMilli = date.atStartOfDay().atZone(ZoneOffset.UTC).toInstant().toEpochMilli()
+
+        val constraints = CalendarConstraints.Builder()
+            .setOpenAt(dateUtcMilli)
+            .setEnd(MaterialDatePicker.thisMonthInUtcMilliseconds())
+            .setValidator(MaxDateValidator.untilToday())
+            .build()
+        val picker = MaterialDatePicker.Builder.datePicker()
+            .setSelection(dateUtcMilli)
+            .setCalendarConstraints(constraints)
+            .build()
+        picker.addOnPositiveButtonClickListener(this)
+        picker.show(parentFragmentManager, SELECT_BIRTH_DATE_DIALOG_TAG)
+    }
+
+    override fun onGenderTextClick(view: View) {
+        Log.i(TAG, "user tapped the gender text")
+
+        val genderIndex = Gender.values().indexOf(viewModel.gender.value)
+
+        val action = ProfileFragmentDirections.toSelectGender(genderIndex)
+        navController.navigate(action)
+    }
+
     override fun onSignOutButtonClick(view: View) {
         Log.i(TAG, "user tapped the sign out button")
 
@@ -124,6 +236,26 @@ class ProfileFragment : Fragment(),
         startActivity(intent)
 
         requireActivity().finish()
+    }
+
+    @UiThread
+    private fun onLoadUserDataLoading() {
+        loadUserDataProgressDialog.show()
+    }
+
+    @UiThread
+    private fun onLoadUserDataSuccess() {
+        // nothing
+    }
+
+    @UiThread
+    private fun onLoadUserDataError() {
+        requireView().showMessage(R.string.profile_load_user_data_error)
+    }
+
+    @UiThread
+    private fun onLoadUserDataCanceled() {
+        // nothing
     }
 
     @UiThread
@@ -143,6 +275,46 @@ class ProfileFragment : Fragment(),
 
     @UiThread
     private fun onDisplayNameUpdateCanceled() {
+        // nothing
+    }
+
+    @UiThread
+    private fun onBirthDateUpdateLoading() {
+        editInfoProgressDialog.show()
+    }
+
+    @UiThread
+    private fun onBirthDateUpdateSuccess() {
+        // nothing
+    }
+
+    @UiThread
+    private fun onBirthDateUpdateError() {
+        requireView().showMessage(R.string.profile_edit_birth_date_error)
+    }
+
+    @UiThread
+    private fun onBirthDateUpdateCanceled() {
+        // nothing
+    }
+
+    @UiThread
+    private fun onGenderUpdateLoading() {
+        editInfoProgressDialog.show()
+    }
+
+    @UiThread
+    private fun onGenderUpdateSuccess() {
+        // nothing
+    }
+
+    @UiThread
+    private fun onGenderUpdateError() {
+        requireView().showMessage(R.string.profile_edit_gender_error)
+    }
+
+    @UiThread
+    private fun onGenderUpdateCanceled() {
         // nothing
     }
 
@@ -215,5 +387,10 @@ class ProfileFragment : Fragment(),
 
         private const val REQUEST_KEY_EDIT_DISPLAY_NAME = "editDisplayName"
         private const val BUNDLE_KEY_DISPLAY_NAME = "displayName"
+
+        private const val SELECT_BIRTH_DATE_DIALOG_TAG = "selectBirthDate"
+
+        const val REQUEST_KEY_SELECT_GENDER = "selectGender"
+        const val BUNDLE_KEY_GENDER = "gender"
     }
 }

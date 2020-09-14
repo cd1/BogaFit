@@ -1,5 +1,6 @@
 package com.gmail.cristiandeives.bogafit
 
+import android.app.ProgressDialog
 import android.icu.text.DecimalFormatSymbols
 import android.icu.text.MeasureFormat
 import android.icu.util.MeasureUnit
@@ -14,6 +15,7 @@ import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.gmail.cristiandeives.bogafit.databinding.FragmentMeasurementsBinding
 import java.util.Locale
@@ -27,6 +29,20 @@ class MeasurementsFragment : Fragment(),
     private lateinit var binding: FragmentMeasurementsBinding
     private val navController by lazy { findNavController() }
     private val viewModel by viewModels<MeasurementsViewModel>()
+
+    private val loadUserDataProgressDialog by lazy {
+        ProgressDialog(requireContext()).apply {
+            setMessage(getString(R.string.loading_message))
+            setCancelable(false)
+        }
+    }
+
+    private val updateInfoProgressDialog by lazy {
+        ProgressDialog(requireContext()).apply {
+            setMessage(getString(R.string.profile_edit_loading))
+            setCancelable(false)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Log.v(TAG, "> onCreateView(...)")
@@ -49,6 +65,59 @@ class MeasurementsFragment : Fragment(),
         }
 
         lifecycle.addObserver(viewModel)
+
+        viewModel.apply {
+            loadUserDataStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
+                Log.v(TAG, "> loadUserDataStatus#onChanged(t=$res)")
+
+                when (res) {
+                    is Resource.Loading -> onLoadUserDataLoading()
+                    is Resource.Success -> onLoadUserDataSuccess()
+                    is Resource.Error -> onLoadUserDataError()
+                    is Resource.Canceled -> onLoadUserDataCanceled()
+                }
+
+                if (res?.isFinished == true) {
+                    loadUserDataProgressDialog.dismiss()
+                }
+
+                Log.v(TAG, "< loadUserDataStatus#onChanged(t=$res)")
+            }
+
+            updateWeightStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
+                Log.v(TAG, "> updateWeightStatus#onChanged(t=$res)")
+
+                when (res) {
+                    is Resource.Loading -> onUpdateWeightLoading()
+                    is Resource.Success -> onUpdateWeightSuccess()
+                    is Resource.Error -> onUpdateWeightError()
+                    is Resource.Canceled -> onUpdateWeightCanceled()
+                }
+
+                if (res?.isFinished == true) {
+                    updateInfoProgressDialog.dismiss()
+                }
+
+                Log.v(TAG, "< updateWeightStatus#onChanged(t=$res)")
+            }
+            
+            updateHeightStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
+                Log.v(TAG, "> updateHeightStatus#onChanged(t=$res)")
+
+                when (res) {
+                    is Resource.Loading -> onUpdateHeightLoading()
+                    is Resource.Success -> onUpdateHeightSuccess()
+                    is Resource.Error -> onUpdateHeightError()
+                    is Resource.Canceled -> onUpdateHeightCanceled()
+                }
+
+                if (res?.isFinished == true) {
+                    updateInfoProgressDialog.dismiss()
+                }
+
+                Log.v(TAG, "< updateHeightStatus#onChanged(t=$res)")
+            }
+        }
 
         parentFragmentManager.setFragmentResultListener(REQUEST_KEY_EDIT_WEIGHT, viewLifecycleOwner, this)
         parentFragmentManager.setFragmentResultListener(REQUEST_KEY_EDIT_HEIGHT, viewLifecycleOwner, this)
@@ -80,6 +149,66 @@ class MeasurementsFragment : Fragment(),
         }
 
         Log.v(TAG, "< onFragmentResult(requestKey=$requestKey, result=$result)")
+    }
+
+    @UiThread
+    private fun onLoadUserDataLoading() {
+        loadUserDataProgressDialog.show()
+    }
+
+    @UiThread
+    private fun onLoadUserDataSuccess() {
+        // do nothing
+    }
+
+    @UiThread
+    private fun onLoadUserDataError() {
+        requireView().showMessage(R.string.profile_load_user_data_error)
+    }
+
+    @UiThread
+    private fun onLoadUserDataCanceled() {
+        // do nothing
+    }
+
+    @UiThread
+    private fun onUpdateWeightLoading() {
+        updateInfoProgressDialog.show()
+    }
+
+    @UiThread
+    private fun onUpdateWeightSuccess() {
+        // do nothing
+    }
+
+    @UiThread
+    private fun onUpdateWeightError() {
+        requireView().showMessage(R.string.edit_weight_error)
+    }
+
+    @UiThread
+    private fun onUpdateWeightCanceled() {
+        // do nothing
+    }
+
+    @UiThread
+    private fun onUpdateHeightLoading() {
+        updateInfoProgressDialog.show()
+    }
+
+    @UiThread
+    private fun onUpdateHeightSuccess() {
+        // do nothing
+    }
+
+    @UiThread
+    private fun onUpdateHeightError() {
+        requireView().showMessage(R.string.edit_height_error)
+    }
+
+    @UiThread
+    private fun onUpdateHeightCanceled() {
+        // do nothing
     }
 
     private val decimalFormatSymbols = DecimalFormatSymbols.getInstance()

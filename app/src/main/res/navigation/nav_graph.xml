@@ -43,6 +43,10 @@
         <action
             android:id="@+id/to_sign_in_phone_number"
             app:destination="@id/sign_in_phone_number_fragment" />
+
+        <action
+            android:id="@+id/to_select_gender"
+            app:destination="@id/select_gender_dialog" />
     </fragment>
 
     <fragment
@@ -113,5 +117,14 @@
         <argument
             android:name="text1"
             app:argType="string" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/select_gender_dialog"
+        android:name="com.gmail.cristiandeives.bogafit.SelectGenderDialogFragment">
+
+        <argument
+            android:name="genderIndex"
+            app:argType="integer" />
     </dialog>
 </navigation>

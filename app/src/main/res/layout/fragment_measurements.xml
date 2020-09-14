@@ -34,26 +34,67 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/large_margin"
                 android:layout_marginEnd="@dimen/large_margin"
-                android:layout_marginTop="@dimen/small_margin"
                 android:layout_marginBottom="@dimen/large_margin"
-                android:text="@{vm.bmi}"
+                android:text="@{vm.formattedBmi}"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bmi_label"
-                tools:text="20" />
+                tools:text="20.0" />
+
+            <TextView
+                android:id="@+id/bmi_description_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                android:text="@{vm.bmiDescription}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bmi_value"
+                tools:text="Normal weight" />
+
+            <TextView
+                android:id="@+id/bfp_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginTop="@dimen/extra_large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                android:text="@string/bfp_title"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bmi_description_text" />
+
+            <TextView
+                android:id="@+id/bfp_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/large_margin"
+
+                android:layout_marginEnd="@dimen/large_margin"
+                android:layout_marginBottom="@dimen/large_margin"
+                android:text="@{vm.formattedBfp}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bfp_label"
+                tools:text="15.5%" />
 
             <TextView
                 android:id="@+id/weight_label"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginTop="@dimen/extra_large_margin"
                 android:layout_marginStart="@dimen/large_margin"
                 android:layout_marginEnd="@dimen/large_margin"
                 style="@style/AppTheme.LabelText"
                 android:text="@string/weight_label"
-                app:layout_constraintTop_toBottomOf="@id/bmi_value"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bfp_value" />
 
             <TextView
                 android:id="@+id/weight_text"
@@ -78,13 +119,13 @@
                 android:id="@+id/height_label"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginTop="@dimen/extra_large_margin"
                 android:layout_marginStart="@dimen/large_margin"
                 android:layout_marginEnd="@dimen/large_margin"
                 style="@style/AppTheme.LabelText"
                 android:text="@string/height_label"
                 app:layout_constraintStart_toEndOf="@+id/weight_text"
-                app:layout_constraintTop_toBottomOf="@id/bmi_value" />
+                app:layout_constraintTop_toBottomOf="@id/bfp_value" />
 
             <TextView
                 android:id="@+id/height_text"

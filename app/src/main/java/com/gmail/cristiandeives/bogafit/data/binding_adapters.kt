@@ -8,6 +8,8 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.BindingConversion
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
+import com.gmail.cristiandeives.bogafit.Gender
+import com.gmail.cristiandeives.bogafit.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -18,6 +20,13 @@ fun formatDateString(date: LocalDate): String {
     val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
         .withLocale(Locale.getDefault())
     return formatter.format(date)
+}
+
+@BindingConversion
+fun formatGenderString(gender: Gender?) = when (gender) {
+    Gender.MALE -> R.string.profile_gender_male
+    Gender.FEMALE -> R.string.profile_gender_female
+    null -> R.string.empty_string_value
 }
 
 @UiThread

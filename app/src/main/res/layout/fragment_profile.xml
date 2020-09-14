@@ -84,6 +84,74 @@
                 app:drawableEndCompat="@drawable/ic_next"
                 tools:text="+55 (19) 98888-7777" />
 
+            <TextView
+                android:id="@+id/birth_date_label"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                style="@style/AppTheme.LabelText"
+                android:text="@string/profile_birth_date_label"
+                app:layout_constraintTop_toBottomOf="@id/phone_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/birth_date_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/small_margin"
+                android:paddingBottom="@dimen/small_margin"
+                android:paddingStart="@dimen/large_margin"
+                android:paddingEnd="@dimen/large_margin"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:text="@{vm.formattedBirthDate}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:onClick="@{action::onBirthDateTextClick}"
+                app:layout_constraintTop_toBottomOf="@+id/birth_date_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:drawableEndCompat="@drawable/ic_next"
+                tools:text="Oct 16, 1986" />
+
+            <TextView
+                android:id="@+id/gender_label"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginStart="@dimen/large_margin"
+                android:layout_marginEnd="@dimen/large_margin"
+                style="@style/AppTheme.LabelText"
+                android:text="@string/profile_gender_label"
+                app:layout_constraintTop_toBottomOf="@id/birth_date_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/gender_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/small_margin"
+                android:paddingBottom="@dimen/small_margin"
+                android:paddingStart="@dimen/large_margin"
+                android:paddingEnd="@dimen/large_margin"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:text="@{vm.gender}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:onClick="@{action::onGenderTextClick}"
+                app:layout_constraintTop_toBottomOf="@+id/gender_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:drawableEndCompat="@drawable/ic_next"
+                tools:text="Male" />
+
             <Button
                 android:id="@+id/sign_out_button"
                 android:layout_width="wrap_content"
@@ -95,7 +163,7 @@
                 android:text="@string/profile_sign_out_button"
                 android:onClick="@{action::onSignOutButtonClick}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/phone_text" />
+                app:layout_constraintTop_toBottomOf="@+id/gender_text" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>
