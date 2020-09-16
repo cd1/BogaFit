@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "277962049800-t6o5utk2o9uu90fvmcivd0nn1n19ct1i.apps.googleusercontent.com",
+          "client_id": "277962049800-f7vl370bouf4sanp40hs2gvv5nbr10qm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.gmail.cristiandeives.bogafit",
-            "certificate_hash": "23e1e127e1b58d8e6da04bbe5c3db314d7bcf24b"
+            "certificate_hash": "5b10bdf0d5df3582e0f546ac516746df598ad93f"
           }
         },
         {
