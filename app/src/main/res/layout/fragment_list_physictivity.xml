@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
+        <variable name="vm" type="com.gmail.cristiandeives.bogafit.ListPhysictivityViewModel" />
         <variable name="action" type="com.gmail.cristiandeives.bogafit.ListPhysictivityActionHandler" />
     </data>
 
@@ -29,14 +30,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/large_margin"
-            android:layout_marginEnd="@dimen/large_margin"
             android:layout_marginBottom="@dimen/large_margin"
             android:text="0"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/physictivity_goal_separator"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/physictivity_count_label"
             tools:text="42" />
+
+        <TextView
+            android:id="@+id/physictivity_goal_separator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:visibility="@{vm.physictivityGoalVisibility}"
+            app:layout_constraintBaseline_toBaselineOf="@id/physictivity_count_value"
+            app:layout_constraintStart_toEndOf="@id/physictivity_count_value"
+            app:layout_constraintEnd_toStartOf="@id/physictivity_goal_value" />
+
+        <TextView
+            android:id="@+id/physictivity_goal_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/large_margin"
+            android:text="@{vm.formattedPhysictivityGoal}"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:visibility="@{vm.physictivityGoalVisibility}"
+            app:layout_constraintBaseline_toBaselineOf="@id/physictivity_count_value"
+            app:layout_constraintStart_toEndOf="@id/physictivity_goal_separator"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="100" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/physictivity_recycler_view"

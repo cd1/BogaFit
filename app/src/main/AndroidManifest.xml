@@ -19,5 +19,7 @@
         </activity>
 
         <activity android:name=".AuthenticationActivity" />
+
+        <activity android:name=".SettingsActivity" />
     </application>
 </manifest>

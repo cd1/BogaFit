@@ -55,6 +55,11 @@
     <string name="list_physictivities_error_server">There was an error loading the physical activities. Try again later.</string>
     <string name="list_physictivities_count_label">Number of physical activities:</string>
 
+    <string name="settings_title">Settings</string>
+    <string name="settings_category_physictivity_goal">Physical activity goal</string>
+    <string name="settings_enable_physictivity_goal">Enable goal</string>
+    <string name="settings_physictivity_goal">Days with physical activity (per year)</string>
+
     <string name="save_physictivity_date_label">Date:</string>
     <string name="save_physictivity_physictivity_label">Physical activity:</string>
     <string name="save_physictivity_loading_message">Saving physical activity…</string>

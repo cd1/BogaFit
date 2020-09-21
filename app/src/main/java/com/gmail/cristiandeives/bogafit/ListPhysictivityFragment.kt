@@ -1,9 +1,13 @@
 package com.gmail.cristiandeives.bogafit
 
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MainThread
@@ -51,6 +55,9 @@ class ListPhysictivityFragment : Fragment(),
         lifecycle.addObserver(viewModel)
 
         binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+
+            vm = viewModel
             action = this@ListPhysictivityFragment
 
             physictivityRecyclerView.adapter = adapter
@@ -76,7 +83,36 @@ class ListPhysictivityFragment : Fragment(),
             }
         }
 
+        setHasOptionsMenu(true)
+
         Log.v(TAG, "< onViewCreated(...)")
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        Log.v(TAG, "> onCreateOptionsMenu(...)")
+
+        inflater.inflate(R.menu.list_physictivity, menu)
+
+        Log.v(TAG, "< onCreateOptionsMenu(...)")
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.v(TAG, "> onOptionsItemSelected(item=${resources.getResourceName(item.itemId)})")
+
+        Log.i(TAG, "user selected menu=$item")
+
+        val consumed = when (item.itemId) {
+            R.id.settings -> {
+                val intent = Intent(requireContext(), SettingsActivity::class.java)
+                startActivity(intent)
+
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
+        Log.v(TAG, "< onOptionsItemSelected(item=${resources.getResourceName(item.itemId)}): $consumed")
+        return consumed
     }
 
     override fun onDestroyView() {

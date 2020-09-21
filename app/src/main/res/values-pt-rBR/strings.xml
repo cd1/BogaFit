@@ -56,6 +56,11 @@
     <string name="list_physictivities_error_server">Houve um erro ao carregar as atividades físicas. Tente novamente mais tarde.</string>
     <string name="list_physictivities_count_label">Quantidade de atividades físicas:</string>
 
+    <string name="settings_title">Configurações</string>
+    <string name="settings_category_physictivity_goal">Meta de atividade física</string>
+    <string name="settings_enable_physictivity_goal">Habilitar meta</string>
+    <string name="settings_physictivity_goal">Dias com atividade física (por ano)</string>
+
     <string name="save_physictivity_date_label">Data:</string>
     <string name="save_physictivity_physictivity_label">Atividade física:</string>
     <string name="save_physictivity_loading_message">Gravando atividade física…</string>

@@ -15,7 +15,15 @@
         <action
             android:id="@+id/to_edit_physictivity"
             app:destination="@id/edit_physictivity_fragment" />
+        <action
+            android:id="@+id/to_settings"
+            app:destination="@id/settings_fragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/settings_fragment"
+        android:name="com.gmail.cristiandeives.bogafit.SettingsFragment"
+        android:label="@string/settings_title" />
 
     <fragment
         android:id="@+id/add_physictivity_fragment"
