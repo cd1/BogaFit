@@ -5,6 +5,7 @@ import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.telephony.PhoneNumberUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.gmail.cristiandeives.bogafit.databinding.AlertDialogEditDisplayNameBinding
 import com.gmail.cristiandeives.bogafit.databinding.FragmentProfileBinding
@@ -28,6 +28,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.util.Locale
 
 @MainThread
 class ProfileFragment : Fragment(),
@@ -38,6 +41,9 @@ class ProfileFragment : Fragment(),
     private lateinit var binding: FragmentProfileBinding
     private val navController by lazy { findNavController() }
     private val viewModel by viewModels<ProfileViewModel>()
+
+    private val birthDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+        .withLocale(Locale.getDefault())
 
     private val loadUserDataProgressDialog by lazy {
         ProgressDialog(requireContext()).apply {
@@ -94,6 +100,14 @@ class ProfileFragment : Fragment(),
                 Log.v(TAG, "< loadUserDataStatus#onChanged(t=$res)")
             }
 
+            displayName.observe(viewLifecycleOwner) { name: String? ->
+                Log.v(TAG, "> displayName#onChanged(t=$name)")
+
+                binding.displayNameText.text = name.takeIf { !it.isNullOrEmpty() } ?: getString(R.string.empty_string_value)
+
+                Log.v(TAG, "< displayName#onChanged(t=$name)")
+            }
+
             updateDisplayNameStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
                 Log.v(TAG, "> updateDisplayNameStatus#onChanged(t=$res)")
 
@@ -109,6 +123,30 @@ class ProfileFragment : Fragment(),
                 }
 
                 Log.v(TAG, "< updateDisplayNameStatus#onChanged(t=$res)")
+            }
+
+            phoneNumber.observe(viewLifecycleOwner) { number: String? ->
+                Log.v(TAG, "> phoneNumber#onChanged(t=$number)")
+
+                binding.phoneText.text = if (!number.isNullOrEmpty()) {
+                    PhoneNumberUtils.formatNumber(number, Locale.getDefault().country)
+                } else {
+                    getString(R.string.empty_string_value)
+                }
+
+                Log.v(TAG, "< phoneNumber#onChanged(t=$number)")
+            }
+
+            birthDate.observe(viewLifecycleOwner) { date: LocalDate? ->
+                Log.v(TAG, "> birthDate#onChanged(t=$date)")
+
+                binding.birthDateText.text = if (date != null) {
+                    birthDateFormatter.format(date)
+                } else {
+                    getString(R.string.empty_string_value)
+                }
+
+                Log.v(TAG, "< birthDate#onChanged(t=$date)")
             }
 
             updateBirthDateStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
@@ -186,7 +224,7 @@ class ProfileFragment : Fragment(),
     override fun onDisplayNameTextClick(view: View) {
         Log.i(TAG, "user tapped the display name text")
 
-        val dialog = EditDisplayNameDialogFragment.newInstance(viewModel.displayName)
+        val dialog = EditDisplayNameDialogFragment.newInstance(viewModel.displayName.value.orEmpty())
         dialog.show(childFragmentManager, dialog.toString())
     }
 
@@ -200,7 +238,7 @@ class ProfileFragment : Fragment(),
     override fun onBirthDateTextClick(view: View) {
         Log.i(TAG, "user tapped the birth date text")
 
-        val date = viewModel.birthDate ?: LocalDate.now()
+        val date = viewModel.birthDate.value ?: LocalDate.now()
         val dateUtcMilli = date.atStartOfDay().atZone(ZoneOffset.UTC).toInstant().toEpochMilli()
 
         val constraints = CalendarConstraints.Builder()

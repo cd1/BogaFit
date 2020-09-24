@@ -14,7 +14,6 @@ import androidx.annotation.MainThread
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gmail.cristiandeives.bogafit.data.Physictivity
@@ -86,6 +85,24 @@ class ListPhysictivityFragment : Fragment(),
         setHasOptionsMenu(true)
 
         Log.v(TAG, "< onViewCreated(...)")
+    }
+
+    override fun onStart() {
+        Log.v(TAG, "> onStart()")
+        super.onStart()
+
+        val goalVisibility = if (viewModel.isPhysictivityGoalEnabled) View.VISIBLE else View.GONE
+
+        binding.apply {
+            physictivityGoalSeparator.visibility = goalVisibility
+
+            physictivityGoalValue.apply {
+                visibility = goalVisibility
+                text = integerFormatter.format(viewModel.physictivityGoal)
+            }
+        }
+
+        Log.v(TAG, "< onStart()")
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

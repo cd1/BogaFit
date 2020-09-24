@@ -1,27 +1,22 @@
 package com.gmail.cristiandeives.bogafit
 
-import android.app.Application
-import android.telephony.PhoneNumberUtils
 import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.UiThread
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.gmail.cristiandeives.bogafit.data.FirestoreRepository
 import com.gmail.cristiandeives.bogafit.data.toLocalDate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.ListenerRegistration
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import java.util.Locale
 
 @MainThread
-class ProfileViewModel(app: Application) : AndroidViewModel(app),
+class ProfileViewModel : ViewModel(),
     DefaultLifecycleObserver {
 
     private val auth = FirebaseAuth.getInstance()
@@ -29,41 +24,17 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app),
 
     private val repo = FirestoreRepository.getInstance()
 
-    private val _formattedDisplayName = MutableLiveData<String>()
-    val formattedDisplayName: LiveData<String> = _formattedDisplayName
-    var displayName = ""
-        private set(value) {
-            _formattedDisplayName.value = formatDisplayName(value)
-            field = value
-        }
+    private val _displayName = MutableLiveData<String>()
+    val displayName: LiveData<String> = _displayName
 
     private val _updateDisplayNameStatus = MutableLiveData<Resource<*>>()
     val updateDisplayNameStatus: LiveData<Resource<*>> = _updateDisplayNameStatus
 
-    private val _formattedPhoneNumber = MutableLiveData<String>()
-    val formattedPhoneNumber: LiveData<String> = _formattedPhoneNumber
-    var phoneNumber = ""
-        private set(value) {
-            _formattedPhoneNumber.value = formatPhoneNumber(value)
-            field = value
-        }
-
-    override fun onCreate(owner: LifecycleOwner) {
-        Log.v(TAG, "> onCreate(...)")
-
-        // "birthDate" needs to be initialized to null here even after the initialization
-        // while declaring it because we need the "set" method to be executed
-        // (so that formattedBirthDate is updated); when the variable is still being declared,
-        // the custom "set" method isn't available and doesn't get executed.
-        birthDate = null
-
-        Log.v(TAG, "< onCreate(...)")
-    }
+    private val _phoneNumber = MutableLiveData<String>()
+    val phoneNumber: LiveData<String> = _phoneNumber
 
     override fun onStart(owner: LifecycleOwner) {
         Log.v(TAG, "> onStart(...)")
-
-        initFormatter()
 
         overrideUiDataFromFirebase()
 
@@ -110,7 +81,7 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app),
 
             Log.d(TAG, "read user success")
 
-            birthDate = snap?.getTimestamp(FirestoreRepository.USER_FIELD_BIRTH_DATE)
+            _birthDate.value = snap?.getTimestamp(FirestoreRepository.USER_FIELD_BIRTH_DATE)
                 ?.toLocalDate()
             _gender.value = snap?.getString(FirestoreRepository.USER_FIELD_GENDER)?.let { gender ->
                 runCatching {
@@ -144,7 +115,7 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app),
         user.updateProfile(profile).addOnSuccessListener {
             Log.d(TAG, "update user display name success")
 
-            displayName = actualNewName
+            _displayName.value = actualNewName
             _updateDisplayNameStatus.value = Resource.Success<Any>()
         }.addOnFailureListener { ex ->
             Log.w(TAG, "update user display name failed [${ex.message}]", ex)
@@ -159,47 +130,15 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app),
     private fun displayNameValue(newName: String) =
         newName.trim().take(DISPLAY_NAME_MAX_LENGTH)
 
-    @UiThread
-    private fun formatDisplayName(newName: String) =
-        displayNameValue(newName).takeIf { it.isNotEmpty() } ?: getApplication<Application>().getString(R.string.empty_string_value)
-
-    @UiThread
-    private fun phoneNumberValue(newNumber: String) =
-        newNumber.trim().take(SignInPhoneNumberViewModel.PHONE_NUMBER_MAX_LENGTH)
-
-    @UiThread
-    private fun formatPhoneNumber(number: String) = phoneNumberValue(number).takeIf { it.isNotEmpty() }?.let { n ->
-        PhoneNumberUtils.formatNumber(n, Locale.getDefault().country)
-    } ?: getApplication<Application>().getString(R.string.empty_string_value)
-
-    private lateinit var birthDateFormatter: DateTimeFormatter
-
-    @UiThread
-    private fun initFormatter() {
-        birthDateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-            .withLocale(Locale.getDefault())
-    }
-
-    private val _formattedBirthDate = MutableLiveData<String>()
-    val formattedBirthDate: LiveData<String> = _formattedBirthDate
-
-    var birthDate: LocalDate? = null
-        private set(value) {
-            field = value
-
-            _formattedBirthDate.value = if (value != null) {
-                birthDateFormatter.format(value)
-            } else {
-                getApplication<Application>().getString(R.string.empty_string_value)
-            }
-        }
+    private val _birthDate = MutableLiveData<LocalDate>()
+    val birthDate: LiveData<LocalDate> = _birthDate
 
     private val _updateBirthDateStatus = MutableLiveData<Resource<*>>()
     val updateBirthDateStatus: LiveData<Resource<*>> = _updateBirthDateStatus
 
     @UiThread
     fun updateBirthDate(date: LocalDate) {
-        if (date == birthDate) {
+        if (date == birthDate.value) {
             Log.d(TAG, "user birth date didn't change; skip update")
             return
         }
@@ -210,7 +149,7 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app),
             Log.d(TAG, "update birth date success")
 
             _updateBirthDateStatus.value = Resource.Success<Any>()
-            birthDate = date
+            _birthDate.value = date
         }.addOnFailureListener { ex ->
             Log.w(TAG, "update birth date failed [${ex.message}]", ex)
             _updateBirthDateStatus.value = Resource.Error<Any>()
@@ -250,8 +189,8 @@ class ProfileViewModel(app: Application) : AndroidViewModel(app),
 
     @UiThread
     private fun overrideUiDataFromFirebase() {
-        displayName = user.displayName.orEmpty()
-        phoneNumber = user.phoneNumber.orEmpty()
+        _displayName.value = user.displayName
+        _phoneNumber.value = user.phoneNumber
     }
 
     @UiThread

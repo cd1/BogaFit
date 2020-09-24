@@ -2,9 +2,7 @@ package com.gmail.cristiandeives.bogafit
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.icu.text.NumberFormat
 import android.util.Log
-import android.view.View
 import androidx.annotation.MainThread
 import androidx.annotation.UiThread
 import androidx.lifecycle.AndroidViewModel
@@ -25,26 +23,19 @@ class ListPhysictivityViewModel(private val context: Application) : AndroidViewM
 
     private val repo = FirestoreRepository.getInstance()
     private lateinit var sharedPref: SharedPreferences
-    private lateinit var physictivityGoalFormatter: NumberFormat
 
     private val _listPhysictivitiesStatus = MutableLiveData<Resource<List<Physictivity>>>()
     val listPhysictivityStatus: LiveData<Resource<List<Physictivity>>> = _listPhysictivitiesStatus
 
     private var physictivitiesQueryListener: ListenerRegistration? = null
 
-    private val _formattedPhysictivityGoal = MutableLiveData<String>()
-    val formattedPhysictivityGoal: LiveData<String> = _formattedPhysictivityGoal
-
-    private val isPhysictivityGoalEnabled: Boolean
+    val isPhysictivityGoalEnabled: Boolean
         get() = sharedPref.getBoolean(SettingsViewModel.PREF_KEY_PHYSICTIVITY_GOAL_ENABLED,
             context.resources.getBoolean(R.bool.default_physictivity_goal_enabled))
 
-    private val physictivityGoal: Int
+    val physictivityGoal: Int
         get() = sharedPref.getString(SettingsViewModel.PREF_KEY_PHYSICTIVITY_GOAL_VALUE, null)?.toIntOrNull()
             ?: context.resources.getString(R.string.default_physictivity_goal).toInt()
-
-    private val _physictivityGoalVisibility = MutableLiveData<Int>()
-    val physictivityGoalVisibility: LiveData<Int> = _physictivityGoalVisibility
 
     override fun onCreate(owner: LifecycleOwner) {
         Log.v(TAG, "> onCreate(...)")
@@ -55,27 +46,12 @@ class ListPhysictivityViewModel(private val context: Application) : AndroidViewM
         Log.v(TAG, "< onCreate(...)")
     }
 
-    override fun onStart(owner: LifecycleOwner) {
-        Log.v(TAG, "> onStart(...)")
-
-        initFormatter()
-        _physictivityGoalVisibility.value = if (isPhysictivityGoalEnabled) View.VISIBLE else View.GONE
-        _formattedPhysictivityGoal.value = physictivityGoalFormatter.format(physictivityGoal)
-
-        Log.v(TAG, "< onStart(...)")
-    }
-
     override fun onDestroy(owner: LifecycleOwner) {
         Log.v(TAG, "> onDestroy(...)")
 
         stopListeningToPhysictivities()
 
         Log.v(TAG, "< onDestroy(...)")
-    }
-
-    @UiThread
-    private fun initFormatter() {
-        physictivityGoalFormatter = NumberFormat.getIntegerInstance()
     }
 
     @UiThread

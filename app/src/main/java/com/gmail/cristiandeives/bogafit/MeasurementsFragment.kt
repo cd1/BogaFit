@@ -3,6 +3,8 @@ package com.gmail.cristiandeives.bogafit
 import android.app.ProgressDialog
 import android.icu.text.DecimalFormatSymbols
 import android.icu.text.MeasureFormat
+import android.icu.text.NumberFormat
+import android.icu.util.Measure
 import android.icu.util.MeasureUnit
 import android.os.Build
 import android.os.Bundle
@@ -15,7 +17,6 @@ import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.gmail.cristiandeives.bogafit.databinding.FragmentMeasurementsBinding
 import java.util.Locale
@@ -29,6 +30,23 @@ class MeasurementsFragment : Fragment(),
     private lateinit var binding: FragmentMeasurementsBinding
     private val navController by lazy { findNavController() }
     private val viewModel by viewModels<MeasurementsViewModel>()
+
+    private val weightFormatter = MeasureFormat.getInstance(Locale.getDefault(), MeasureFormat.FormatWidth.SHORT, NumberFormat.getInstance().apply {
+        minimumFractionDigits = 1
+        maximumFractionDigits = 1
+    })
+    private val heightFormatter = MeasureFormat.getInstance(Locale.getDefault(), MeasureFormat.FormatWidth.SHORT, NumberFormat.getInstance().apply {
+        minimumFractionDigits = 2
+        maximumFractionDigits = 2
+    })
+    private val bmiFormatter = NumberFormat.getInstance().apply {
+        minimumFractionDigits = 1
+        maximumFractionDigits = 1
+    }
+    private val bfpFormatter = NumberFormat.getPercentInstance().apply {
+        minimumFractionDigits = 1
+        maximumFractionDigits = 1
+    }
 
     private val loadUserDataProgressDialog by lazy {
         ProgressDialog(requireContext()).apply {
@@ -84,6 +102,20 @@ class MeasurementsFragment : Fragment(),
                 Log.v(TAG, "< loadUserDataStatus#onChanged(t=$res)")
             }
 
+            weight.observe(viewLifecycleOwner) { weight ->
+                Log.v(TAG, "> weight#onChanged(t=$weight)")
+
+                val formattedWeight = if (weight > 0) {
+                    weightFormatter.format(Measure(weight, MeasureUnit.KILOGRAM))
+                } else {
+                    getString(R.string.empty_string_value)
+                }
+
+                binding.weightText.text = formattedWeight
+
+                Log.v(TAG, "< weight#onChanged(t=$weight)")
+            }
+
             updateWeightStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
                 Log.v(TAG, "> updateWeightStatus#onChanged(t=$res)")
 
@@ -100,7 +132,21 @@ class MeasurementsFragment : Fragment(),
 
                 Log.v(TAG, "< updateWeightStatus#onChanged(t=$res)")
             }
-            
+
+            height.observe(viewLifecycleOwner) { height ->
+                Log.v(TAG, "> height#onChanged(t=$height})")
+
+                val formattedHeight = if (height >= 0) {
+                    heightFormatter.format(Measure(height, MeasureUnit.METER))
+                } else {
+                    getString(R.string.empty_string_value)
+                }
+
+                binding.heightText.text = formattedHeight
+
+                Log.v(TAG, "< height#onChanged(t=$height})")
+            }
+
             updateHeightStatus.observe(viewLifecycleOwner) { res: Resource<*>? ->
                 Log.v(TAG, "> updateHeightStatus#onChanged(t=$res)")
 
@@ -116,6 +162,45 @@ class MeasurementsFragment : Fragment(),
                 }
 
                 Log.v(TAG, "< updateHeightStatus#onChanged(t=$res)")
+            }
+
+            bmi.observe(viewLifecycleOwner) { bmi ->
+                Log.v(TAG, "> bmi#onChanged(t=$bmi)")
+
+                val formattedBmi = if (bmi >= 0) {
+                    bmiFormatter.format(bmi)
+                } else {
+                    getString(R.string.no_value)
+                }
+
+                val bmiDescriptionRes = when {
+                    bmi < 0 -> R.string.no_value
+                    bmi < 18.5 -> R.string.bmi_underweight_description
+                    bmi in 18.5..25.0 -> R.string.bmi_normal_weight_description
+                    bmi in 25.0..30.0 -> R.string.bmi_overweight_description
+                    else -> R.string.bmi_obese_description
+                }
+
+                binding.apply {
+                    bmiValue.text = formattedBmi
+                    bmiDescriptionText.setText(bmiDescriptionRes)
+                }
+
+                Log.v(TAG, "< bmi#onChanged(t=$bmi)")
+            }
+
+            bfp.observe(viewLifecycleOwner) { bfp ->
+                Log.v(TAG, "> bfp#onChanged(t=$bfp)")
+
+                val formattedBfp = if (bfp >= 0) {
+                    bfpFormatter.format(bfp)
+                } else {
+                    getString(R.string.no_value)
+                }
+
+                binding.bfpValue.text = formattedBfp
+
+                Log.v(TAG, "< bfp#onChanged(t=$bfp)")
             }
         }
 
@@ -224,7 +309,7 @@ class MeasurementsFragment : Fragment(),
             "kg"
         }
 
-        val weightDouble = viewModel.weight.takeIf { it >= 0 } ?: DEFAULT_WEIGHT
+        val weightDouble = viewModel.weight.value?.takeIf { it >= 0 } ?: DEFAULT_WEIGHT
         val weight0 = weightDouble.toInt()
         val weight1 = ((weightDouble - weight0) * 10).roundToInt()
 
@@ -249,7 +334,7 @@ class MeasurementsFragment : Fragment(),
             "m"
         }
 
-        val heightDouble = viewModel.height.takeIf { it >= 0 } ?: DEFAULT_HEIGHT
+        val heightDouble = viewModel.height.value?.takeIf { it >= 0 } ?: DEFAULT_HEIGHT
         val height0 = heightDouble.toInt()
         val height1 = ((heightDouble - height0) * 100).roundToInt()
 

@@ -1,104 +1,63 @@
 package com.gmail.cristiandeives.bogafit
 
-import android.app.Application
-import android.icu.text.MeasureFormat
-import android.icu.text.NumberFormat
-import android.icu.util.Measure
-import android.icu.util.MeasureUnit
 import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.UiThread
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import com.gmail.cristiandeives.bogafit.data.FirestoreRepository
 import com.gmail.cristiandeives.bogafit.data.toLocalDate
 import com.google.firebase.firestore.ListenerRegistration
 import java.time.LocalDate
 import java.time.Period
-import java.util.Locale
 
 @MainThread
-class MeasurementsViewModel(private val context: Application) : AndroidViewModel(context),
+class MeasurementsViewModel : ViewModel(),
     DefaultLifecycleObserver {
 
     private val repo = FirestoreRepository.getInstance()
 
-    private lateinit var weightFormatter: MeasureFormat
-    private lateinit var heightFormatter: MeasureFormat
-    private lateinit var bmiFormatter: NumberFormat
-    private lateinit var bfpFormatter: NumberFormat
+    private val _weight = MutableLiveData<Double>()
+    val weight: LiveData<Double> = _weight
 
-    var weight = INVALID_MEASUREMENT
-        private set(value) {
-            field = value
+    private val _height = MutableLiveData<Double>()
+    val height: LiveData<Double> = _height
 
-            updateFormattedValues()
+    private val _bmi = MediatorLiveData<Double>().apply {
+        val weightObserver = Observer<Double> { weight ->
+            value = computeBmi(weight = weight)
         }
-    private val _formattedWeight = MutableLiveData<String>()
-    val formattedWeight: LiveData<String> = _formattedWeight
+        addSource(_weight, weightObserver)
 
-    @UiThread
-    private fun formatWeight() = if (weight >= 0) {
-        weightFormatter.format(Measure(weight, MeasureUnit.KILOGRAM))
-    } else {
-        context.getString(R.string.empty_string_value)
-    }
-
-    var height = INVALID_MEASUREMENT
-        private set(value) {
-            field = value
-
-            updateFormattedValues()
+        val heightObserver = Observer<Double> { height ->
+            value = computeBmi(height = height)
         }
-    private val _formattedHeight = MutableLiveData<String>()
-    val formattedHeight: LiveData<String> = _formattedHeight
-
-    @UiThread
-    private fun formatHeight() = if (height >= 0) {
-        heightFormatter.format(Measure(height, MeasureUnit.METER))
-    } else {
-        context.getString(R.string.empty_string_value)
+        addSource(_height, heightObserver)
     }
+    val bmi: LiveData<Double> = _bmi
 
-    private val _formattedBmi = MediatorLiveData<String>()
-    val formattedBmi: LiveData<String> = _formattedBmi
+    private val _bfp = MediatorLiveData<Double>().apply {
+        val bmiObserver = Observer<Double> { bmi ->
+            value = computeBfp(bmi)
+        }
+        addSource(_bmi, bmiObserver)
+    }
+    val bfp: LiveData<Double> = _bfp
 
     @UiThread
-    private fun computeBmi() = if (weight >= 0 && height >= 0) {
+    private fun computeBmi(weight: Double = _weight.value ?: INVALID_MEASUREMENT, height: Double = _height.value ?: INVALID_MEASUREMENT) = if (weight >= 0 && height >= 0) {
         weight / (height * height)
     } else {
         INVALID_MEASUREMENT
     }
 
     @UiThread
-    private fun formatBmi(bmi: Double) = if (bmi >= 0) {
-        bmiFormatter.format(bmi)
-    } else {
-        context.getString(R.string.no_value)
-    }
-
-    private val _bmiDescription = MutableLiveData<String>()
-    val bmiDescription: LiveData<String> = _bmiDescription
-
-    @UiThread
-    private fun formatBmiDescription(bmi: Double) =
-        context.getString(when {
-            bmi < 0 -> R.string.no_value
-            bmi < 18.5 -> R.string.bmi_underweight_description
-            bmi in 18.5..25.0 -> R.string.bmi_normal_weight_description
-            bmi in 25.0..30.0 -> R.string.bmi_overweight_description
-            else -> R.string.bmi_obese_description
-        })
-
-    private val _formattedBfp = MutableLiveData<String>()
-    val formattedBfp: LiveData<String> = _formattedBfp
-
-    @UiThread
-    private fun computeBfp(bmi: Double) = if (bmi >= 0 && birthDate != null && gender != null) {
+    private fun computeBfp(bmi: Double = computeBmi(), birthDate: LocalDate? = this.birthDate, gender: Gender? = this.gender) = if (bmi >= 0 && birthDate != null && gender != null) {
         val today = LocalDate.now()
         val age = Period.between(birthDate, today)
         val ageInYears = age.years + (age.months / 12.0) + (age.days / today.lengthOfYear().toDouble())
@@ -109,27 +68,8 @@ class MeasurementsViewModel(private val context: Application) : AndroidViewModel
         INVALID_MEASUREMENT
     }
 
-    @UiThread
-    private fun formatBfp(bfp: Double) =  if (bfp >= 0) {
-        bfpFormatter.format(bfp)
-    } else {
-        context.getString(R.string.no_value)
-    }
-
-    override fun onCreate(owner: LifecycleOwner) {
-        Log.v(TAG, "> onCreate(...)")
-
-        initFormatters()
-
-        Log.v(TAG, "< onCreate(...)")
-    }
-
     override fun onStart(owner: LifecycleOwner) {
         Log.v(TAG, "> onStart(...)")
-
-        initFormatters()
-
-        updateFormattedValues()
 
         startListeningToUser()
         startListeningToWeight()
@@ -146,44 +86,6 @@ class MeasurementsViewModel(private val context: Application) : AndroidViewModel
         stopListeningToHeight()
 
         Log.v(TAG, "< onStop(...)")
-    }
-
-    @UiThread
-    private fun initFormatters() {
-        val locale = Locale.getDefault()
-
-        val weightNumberFormat = NumberFormat.getInstance(locale).apply {
-            minimumFractionDigits = 1
-            maximumFractionDigits = 1
-        }
-        weightFormatter = MeasureFormat.getInstance(locale, MeasureFormat.FormatWidth.SHORT, weightNumberFormat)
-
-        val heightNumberFormat = NumberFormat.getInstance(locale).apply {
-            minimumFractionDigits = 2
-            maximumFractionDigits = 2
-        }
-        heightFormatter = MeasureFormat.getInstance(locale, MeasureFormat.FormatWidth.SHORT, heightNumberFormat)
-
-        bmiFormatter = NumberFormat.getInstance(locale).apply {
-            minimumFractionDigits = 1
-            maximumFractionDigits = 1
-        }
-
-        bfpFormatter = NumberFormat.getPercentInstance(locale).apply {
-            minimumFractionDigits = 1
-            maximumFractionDigits = 1
-        }
-    }
-
-    @UiThread
-    private fun updateFormattedValues() {
-        val bmi = computeBmi()
-
-        _formattedWeight.value = formatWeight()
-        _formattedHeight.value = formatHeight()
-        _formattedBmi.value = formatBmi(bmi)
-        _bmiDescription.value = formatBmiDescription(bmi)
-        _formattedBfp.value = formatBfp(computeBfp(bmi))
     }
 
     private var birthDate: LocalDate? = null
@@ -215,7 +117,7 @@ class MeasurementsViewModel(private val context: Application) : AndroidViewModel
                 Gender.valueOf(genderStr)
             }.getOrNull()
 
-            _formattedBfp.value = formatBfp(computeBfp(computeBmi()))
+            _bfp.value = computeBfp(computeBmi())
 
             _loadUserDataStatus.value = Resource.Success<Any>()
         }
@@ -237,7 +139,7 @@ class MeasurementsViewModel(private val context: Application) : AndroidViewModel
             }
 
             Log.d(TAG, "reading weight success")
-            weight = snap?.getDouble(FirestoreRepository.WEIGHT_FIELD_VALUE) ?: INVALID_MEASUREMENT
+            _weight.value = snap?.getDouble(FirestoreRepository.WEIGHT_FIELD_VALUE) ?: INVALID_MEASUREMENT
         }
     }
 
@@ -257,7 +159,7 @@ class MeasurementsViewModel(private val context: Application) : AndroidViewModel
             }
 
             Log.d(TAG, "reading height success")
-            height = snap?.getDouble(FirestoreRepository.HEIGHT_FIELD_VALUE) ?: INVALID_MEASUREMENT
+            _height.value = snap?.getDouble(FirestoreRepository.HEIGHT_FIELD_VALUE) ?: INVALID_MEASUREMENT
         }
     }
 
@@ -271,7 +173,8 @@ class MeasurementsViewModel(private val context: Application) : AndroidViewModel
 
     @UiThread
     fun updateWeight(weight: Double) {
-        if (weight.approximatelyEquals(this.weight)) {
+        val currentWeight = _weight.value ?: INVALID_MEASUREMENT
+        if (weight.approximatelyEquals(currentWeight)) {
             Log.d(TAG, "user weight didn't change; skip update")
             return
         }
@@ -280,7 +183,7 @@ class MeasurementsViewModel(private val context: Application) : AndroidViewModel
 
         repo.setWeight(weight).addOnSuccessListener {
             Log.d(TAG, "user weight update success")
-            this.weight = weight
+            _weight.value = weight
             _updateWeightStatus.value = Resource.Success<Any>()
         }.addOnFailureListener { ex ->
             Log.w(TAG, "user weight update failed [${ex.message}]", ex)
@@ -296,7 +199,8 @@ class MeasurementsViewModel(private val context: Application) : AndroidViewModel
 
     @UiThread
     fun updateHeight(height: Double) {
-        if (height.approximatelyEquals(this.height)) {
+        val currentHeight = _height.value ?: INVALID_MEASUREMENT
+        if (height.approximatelyEquals(currentHeight)) {
             Log.d(TAG, "user height didn't change; skip update")
             return
         }
@@ -305,7 +209,7 @@ class MeasurementsViewModel(private val context: Application) : AndroidViewModel
 
         repo.setHeight(height).addOnSuccessListener {
             Log.d(TAG, "user height update success")
-            this.height = height
+            _height.value = height
             _updateHeightStatus.value = Resource.Success<Any>()
         }.addOnFailureListener { ex ->
             Log.w(TAG, "user height update failed [${ex.message}]", ex)

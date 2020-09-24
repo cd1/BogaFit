@@ -45,7 +45,6 @@
             android:layout_height="wrap_content"
             android:text="/"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            android:visibility="@{vm.physictivityGoalVisibility}"
             app:layout_constraintBaseline_toBaselineOf="@id/physictivity_count_value"
             app:layout_constraintStart_toEndOf="@id/physictivity_count_value"
             app:layout_constraintEnd_toStartOf="@id/physictivity_goal_value" />
@@ -55,9 +54,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/large_margin"
-            android:text="@{vm.formattedPhysictivityGoal}"
+            android:text="0"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-            android:visibility="@{vm.physictivityGoalVisibility}"
             app:layout_constraintBaseline_toBaselineOf="@id/physictivity_count_value"
             app:layout_constraintStart_toEndOf="@id/physictivity_goal_separator"
             app:layout_constraintEnd_toEndOf="parent"
